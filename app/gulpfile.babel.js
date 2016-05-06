@@ -8,6 +8,7 @@ import gzip from 'gulp-gzip';
 import replace from 'gulp-replace';
 import del from 'del';
 import runSequence from 'run-sequence';
+import mocha from 'gulp-mocha';
 import webpack from  'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import webpackDevConfig from './config/webpack.dev.js';
@@ -116,3 +117,11 @@ gulp.task('watch', ['static:dev'], function() {
     server.listen(8081, '0.0.0.0');
 });
 
+
+///////////////////////////////////////////////////////////
+// Unit tests
+gulp.task('test:unit', () => {
+    return gulp.src('src/**/*.test.js', {read: false})
+        //.pipe(mocha({reporter: 'nyan'}));
+        .pipe(mocha());
+});
