@@ -3,10 +3,17 @@ import {connect} from 'react-redux';
 import {Navbar, Nav, NavItem} from 'react-bootstrap';
 import {bindActionCreators} from 'redux';
 import * as actionCreatorsSong from 'actions/Song';
+import brace from 'brace';
+import AceEditor from 'react-ace';
 import './App.styl';
+import ChordProView from 'components/ChordProView';
+
+import 'brace/mode/java';
+import 'brace/theme/github';
+
 
 const mapStateToProps = (state) => ({
-    text: state.song.text
+    songStr: state.song.songStr
 });
 
 const mapActionsToProps = (dispatch) => ({
@@ -33,16 +40,29 @@ export default class App extends React.Component{
                 </Navbar>
     
                 <div className="bc-content">
-                    <svg width="500" height="800">
-                        <circle cx={50} cy={50} r={10} fill="red" />
-                        <text x="0" y="15" fill="black" font-size="60">I love SVG!</text>
-                        {true && <rect x="0" y="0" width="500" height="800"
-                          stroke="black" stroke-width="1" fill="none" />}
-                    </svg>
+                    <AceEditor
+                        //mode="java"
+                        //theme="github"
+                        value={this.props.songStr}
+                        //value="aoj"
+                        onChange={this.onChange.bind(this)}
+                        name="UNIQUE_ID_OF_DIV"
+                        editorProps={{blockScrolling: true}}
+                    />
+
+                    <ChordProView>
+                        {this.props.songStr}
+                    </ChordProView>
                 </div>
 
             </div>
         )
     }
 
+    onChange(songStr) {
+        this.props.actionsSong.save(songStr);
+        //console.log('change',newValue);
+        //let tokens = tokenize(songStr);
+        //let song = parse(tokens);
+    }
 }

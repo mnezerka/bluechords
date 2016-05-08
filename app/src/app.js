@@ -12,7 +12,7 @@ const logger = createLogger();
 const store = createStore(
     rootReducer,
     window.__INITIAL_STATE__,
-    applyMiddleware(logger)
+    //applyMiddleware(logger)
 );
 
 ReactDOM.render((
