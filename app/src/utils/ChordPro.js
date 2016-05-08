@@ -1,26 +1,40 @@
 // Returns an ElementTree-based DOM using output from tokenizer()'
-class Node {
-    static EL_TYPE_ROOT = 'root';
-    static EL_TYPE_META = 'meta';
-
-    constructor(type = null) {
+export class Node {
+    constructor() {
         this.children = [];
     }
 }
 
-class NodeRoot extends Node { };
-class NodeMeta extends Node { };
-class NodeHead extends Node { };
-class NodeBody extends Node { };
-class NodeComment extends Node { };
-class NodeChord extends Node { };
-class NodeRow extends Node { };
-class NodeVerse extends Node { };
+export class NodeDoc {
+    constructor() {
+        this.body = [],
+        this.title = null,
+        this.subTitle = null 
+    }
+};
 
-/*const LineBegin = 'LINE_BEGIN';
-const VerseBegin = 'VERSE_BEGIN';
-const TabBegin = 'TAB_BEGIN';
-const ChorusBegin = 'CHORUS_BEGIN';*/
+export class NodeMeta extends Node { };
+export class NodeHead extends Node { };
+export class NodeBody extends Node { };
+export class NodeComment extends Node { };
+export class NodeChord extends Node {
+    constructor(chord = null) {
+        super();
+        this.chord = chord
+        this.text = '';
+    };
+}
+export class NodeRow extends Node { };
+export class NodeVerse extends Node { };
+export class NodeChorus extends Node { };
+
+class Meta {};
+
+class StackMark {};
+class LineBeginType extends StackMark {};
+class VerseBeginType extends StackMark {};
+class TabBeginType extends StackMark {};
+class ChorusBeginType extends StackMark {};
 
 var LineBegin = {type:'line-begin'};
 var VerseBegin = {type:'verse-begin'};
@@ -31,11 +45,11 @@ function ltrim(str) {
     return str.replace(/^\s+/,"");
 }
 
-
 function arrayExtend(arr, other_arr) {
     // you should include a test to check whether other_array really is an array
     other_arr.forEach(function(v) {arr.push(v)}, arr);
 }
+
 
 // Test wether "o" is an Node
 function isNode(o) {
@@ -52,7 +66,8 @@ Scan stack "s" for "t", pop and return between "t" and end of stack.
 If item "t" is not found, then restore stack and return empty list.
 */
 function pop_to_object(s, t) {
-    console.log('pop to object enter stack:', s, ' look for:',  t);
+    //console.log('------------------------------');
+    //console.log('pop to object enter stack:', s, ' look for:',  t);
     let result = [];
     if (s.length === 0)
         return result;
@@ -70,97 +85,67 @@ function pop_to_object(s, t) {
         result.shift();
     } 
 
-    console.log('pop to object leave stack:', s, ' result:', result);
+    //console.log('pop to object leave stack:', s, ' result:', result);
+    //console.log('------------------------------');
 
     return result; 
 }
 
 export function parse(tokens) {
      
-    let root = new NodeRoot();
+    let doc = new NodeDoc();
 
-    let head = new NodeHead();
-    root.children.push(head);
-
-    let body = []; //new NodeBody();
-    root.children.push(body);
-
-    let stack = [{}, body] // bottommost stack member is the meta dict
+    let stack = [] // bottommost stack member is the meta dict
+    //let stack = []; // bottommost stack member is the meta dict
 
     for (let i = 0; i < tokens.length; i++) {
         let token = tokens[i];
         let ttype = token[0];
         let tvalue = token[1];
 
-        console.log('token', token);
+        //console.log('-------------');
+        //console.log('before', token, stack);
 
         switch (ttype) {
         case CHP_TOKEN_DIRECTIVE:
-            directive_handler(tokens, stack, ttype, tvalue)
+            directive_handler(tokens, stack, doc, ttype, tvalue)
             break;
         case CHP_TOKEN_COMMENT:
             stack.push(new Node(Node.EL_TYPE_COMMENT, tvalue));
             break;
         case CHP_TOKEN_CHORD:
             // always maintain a chord:lyric pairing on the stack
-            stack.append(Element('cho', {'c':tvalue.strip()}))
+            stack.push(new NodeChord(tvalue.trim()));
             stack[stack.length - 1].text = ''
             break;
         case CHP_TOKEN_LYRIC:
             // if a lyric appears before a chord, assume a blank chord
             tvalue = ltrim(tvalue);
-            console.log('stack here', stack);
             if (tvalue.length > 0) {
                 if (!isNode(stack[stack.length - 1]) || !stack[stack.length - 1] instanceof NodeChord) {
                     stack.push(new NodeChord(''));
-                    stack[stack.length - 1].text = '';
                 }
                 stack[stack.length - 1].text = stack[stack.length - 1].text + tvalue
             }
-            console.log('stack here2', stack);
             break;
         case CHP_TOKEN_SOL:
             stack.push(LineBegin)
             break;
-        case CHP_TOKEN_EOL:
-            // offload large chunk of logic to eol_handler()
-            // this is also where the parts of the DOM are moved from the 
-            //   stack to the document
-            eol_handler(tokens, stack, ttype, tvalue)
-            break;
         case CHP_TOKEN_SOF:
             break;
+        case CHP_TOKEN_EOL:
         case CHP_TOKEN_EOF:
-            eol_handler(tokens, stack, ttype, tvalue)
+            eol_handler(tokens, stack, doc, ttype, tvalue)
             break;
         default:
             throw `Unrecognized token ${ttype} (${tvalue}) at line xxx`;
         }
+        //console.log('after', token, stack);
+        //console.log('-------------');
     }
-    /*
-    
-    # update metadata
-    meta = stack[0]
-    if 'title' in meta:
-        e = Element('title')
-        e.text = meta['title']
-        head.append(e)
-    if 'subtitle' in meta:
-        e = Element('subtitle')
-        e.text = meta['subtitle']
-        head.append(e)
-    if 'define' in meta and len(meta['define']):
-        for d in meta['define']:
-            e = Element('define')
-            e.text = d
-            head.append(e)
-    */
 
-    return root; 
+    return doc; 
 }
-
-
-
 
 /*
 Parser handler of end-of-line and end-of-file events
@@ -168,36 +153,39 @@ Parser handler of end-of-line and end-of-file events
 This is largely where elements are moved from the stack and put into
 the document.
 */
-function eol_handler(tokens, stack, ttype, tvalue) {
+function eol_handler(tokens, stack, doc, ttype, tvalue) {
+
+    //console.log('doc is ', doc);
    
     // get list of object on current line
     let line = pop_to_object(stack, LineBegin)
     
     if (line.length > 0) {
         let allComments = true;
-        for (let i = 0; i < line.lenght; i++) {
+        for (let i = 0; i < line.length; i++) {
             if (!isComment(line[i])) {
                 allComments = false;
                 break;
             }
         }
+        //console.log('all comments', allComments);
         if (allComments) {
             // current line contains nothing but Comment objects
-            stack = arrayExtend(stack, line);
+            arrayExtend(stack, line);
         } else {
-            r = new NodeRow();
+            let r = new NodeRow();
             stack.push(r);
-            r.children = arrayExtend(r.children, line);
+            arrayExtend(r.children, line);
         }
     } else {
         //  odds are we're currently parsing a blank line
         // - which is used to separate verse blocks
-        let inChorus = false;
 
         // check if we are inside chorus
-        for (const o of stack.reverse()) {
-            if (o === ChorusBegin) {
-                inChorus = True;
+        let inChorus = false;
+        for (let i = stack.length - 1; i >= 0; i --) {
+            if (stack[i] === ChorusBegin) {
+                inChorus = true;
                 break
             }
         }
@@ -205,50 +193,42 @@ function eol_handler(tokens, stack, ttype, tvalue) {
         // if we're in a chrous, stay in chorus mode
         // else, stop verse and start new verse
         if (!inChorus) {
-            let verse = pop_to_object(stack, VerseBegin)
+            let verseItems = pop_to_object(stack, VerseBegin)
             
-            if (verse.length > 0) {
+            if (verseItems.length > 0) {
                 let v = new NodeVerse();
-                stack[1].push(v);
-                v.children = arrayExtend(v.children, verse);
+                doc.body.push(v);
+                arrayExtend(v.children, verseItems);
+                //console.log('after pushing node verse', JSON.stringify(doc));
 
             } else {
                 // we're not in a verse, so move everything from the 
                 // stack to the document
-                let l = []
-                while (stack.length > 2 && stack[-1] instanceof Node) {
-                    l.insert(0, stack.pop())
-                }
-                stack[1].children = arrayExtend(stack[1].children, l);
-
+                arrayExtend(doc.body, stack);
             } 
             stack.push(VerseBegin)
         }
     }
 }
-// Sets a key:value pair in the metadata at stack[0]'
-function set_meta(stack, key, value) {
-    stack[0][key] = value;
-}
 
 // Parser handler for all directives'
-function directive_handler(tokens, stack, ttype, tvalue) {
+function directive_handler(tokens, stack, doc, ttype, tvalue) {
     let tag = tvalue;
     let arg = '';
     if (tvalue.indexOf(':') > 0) {
         tag = tvalue.substring(0, tvalue.indexOf(':')).trim();
-        arg = tvalue.substring(0, tvalue.indexOf(':') + 1).trim();
+        arg = tvalue.substring(tvalue.indexOf(':') + 1).trim();
     }
 
     tag = tag.toLowerCase();
     
     if (['t', 'title'].indexOf(tag) >= 0) {
         if (arg.length === 0) { throw `{${tag}} directive needs an argument`; }
-        set_meta(stack, 'title', arg)
+        doc.title = arg;
 
     } else if (['st', 'subtitle'].indexOf(tag) >= 0) {
         if (arg.length === 0) { throw `{${tag}} directive needs an argument`; }
-        set_meta(stack, 'subtitle', arg);
+        doc.subTitle = arg;
 
     } else if (['c', 'comment'].indexOf(tag) >= 0) {
         if (arg.length === 0) { throw `{${tag}} directive needs an argument`; }
@@ -264,7 +244,7 @@ function directive_handler(tokens, stack, ttype, tvalue) {
         if (verse.length > 0) {
             v = new NodeVerse();
             stack.push(v);
-            v.children = arrayExtend(v.children, verse);
+            arrayExtend(v.children, verse);
         }
         stack.push(ChorusBegin)
 
@@ -274,15 +254,15 @@ function directive_handler(tokens, stack, ttype, tvalue) {
         if (arg.length > 0) { throw `{${tag}} directive needs no argument (${arg})`; }
         pop_to_object(stack, LineBegin)
         let c = new NodeChorus();
-        stack[1].push(c)
+        doc.body.push(c);
         let chorus = pop_to_object(stack, ChorusBegin)
-        c.children = arrayExtend(c.children, chorus);
+        arrayExtend(c.children, chorus);
 
     } else if (tag === 'tab') {
         if (arg.length === 0) { throw `{${tag}} directive needs an argument`; }
         let t = new NodeTab();
         t.text = arg;
-        stack[1].push(t);
+        doc.body.push(t);
 
     } else if (['np', 'new_page', 'npp', 'new_physical_page', 'ns', 'new_song', 'rowname'].indexOf(tag) >= 0) {
     
