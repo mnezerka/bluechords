@@ -220,7 +220,7 @@ describe('ChordPro Parser', function() {
         expect(chord.text).is.equal('line2');
     });
 
-    it.only('simple song', function () {
+    it('simple song', function () {
         //let song = parse('');
         let songStr = '{title: Song title}\n' +
             '{subtitle: Song subtitle}\n\n' +

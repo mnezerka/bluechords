@@ -41,12 +41,16 @@ export default class App extends React.Component{
     
                 <div className="bc-content">
                     <AceEditor
+                        ref="editor"
+                        //width="100%"
                         //mode="java"
-                        //theme="github"
+                        theme="github"
+                        fontSize={14}
+                        showPrintMargin={false}
+                        showGutter={false}
                         value={this.props.songStr}
-                        //value="aoj"
                         onChange={this.onChange.bind(this)}
-                        name="UNIQUE_ID_OF_DIV"
+                        name="bc-song-editor"
                         editorProps={{blockScrolling: true}}
                     />
 
@@ -60,6 +64,7 @@ export default class App extends React.Component{
     }
 
     onChange(songStr) {
+        console.log(this.refs.editor.editor.session.getLength());
         this.props.actionsSong.save(songStr);
         //console.log('change',newValue);
         //let tokens = tokenize(songStr);

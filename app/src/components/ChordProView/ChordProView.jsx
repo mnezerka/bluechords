@@ -2,30 +2,59 @@ import React from 'react';
 import {tokenize, parse, NodeChord, NodeChorus, NodeRow, NodeVerse} from 'utils/ChordPro';
 import './ChordProView.styl';
 
-class ChordText extends React.Component {
-    render() {
-        let chordText = this.props.children;
+class Text extends React.Component {
 
-        return (
-            <span className="bc-chordpro-view-chordtext">
-                <span className="bc-chordpro-view-chord">{chordText.chord}</span>
-                <span>{chordText.text}</span>
-        </span>);
+    render() {
+        let text = this.props.children;
+        if (text === null || text.length === 0) {
+            text = '';
+        }
+        return (<td className="bc-chordpro-view-text">{text}</td>);
+    }
+}
+
+
+class Chord extends React.Component {
+
+    render() {
+        let chord = this.props.children;
+        return (<td className="bc-chordpro-view-chord">{chord}</td>);
     }
 }
 
 
 class Row extends React.Component {
-    render() {
+
+    renderChordRow() {
         let row = this.props.children;
-        let items = [];
-        for (let i = 0; i < row.children.length; i++) {
-            if (row.children[i] instanceof NodeChord) {
-                items.push(<ChordText>{row.children[i]}</ChordText>);
+        let result = [];
+        for (const item of row.children) {
+            if (item  instanceof NodeChord) {
+                result.push(<Chord>{item.chord}</Chord>);
             }
         }
+        return result;
+    }
 
-        return (<div className="bc-chordpro-view-row">{items}</div>);
+    renderTextRow() {
+        let row = this.props.children;
+        let result = [];
+        for (const item of row.children) {
+            if (item  instanceof NodeChord) {
+                result.push(<Text>{item.text}</Text>);
+            }
+        }
+        return result;
+
+    }
+
+    render() {
+        return (
+            <table className="bc-chordpro-view-row">
+                <tr>{this.renderChordRow()}</tr>
+                <tr>{this.renderTextRow()}</tr>
+            </table>
+        );
     }
 
 }
@@ -75,8 +104,6 @@ export default class ChordProView extends React.Component{
         } catch (e) {
             return(<div className="bc-chordpro-view"> {e}</div>);
         }
-
-        console.log(song);
 
         let items = [];
         for (let i = 0; i < song.body.length; i++) {
