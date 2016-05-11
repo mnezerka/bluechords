@@ -1,5 +1,11 @@
 #!/bin/bash 
 
+# colors for nice shell output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
 if [ "$#" -lt 2 ]; then
         echo "Illegal number of parameters"
         exit 1
@@ -17,7 +23,7 @@ case $CMD in
                 exit 1
         fi
 
-        echo "Building docker ${DOCKER_NAME} from directory ${1}"
+        echo "$(YELLOW)Building docker ${DOCKER_NAME} from directory ${1}$(NC)"
         docker build -t ${DOCKER_NAME} ${1}
         ;;
 

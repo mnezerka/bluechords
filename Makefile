@@ -1,4 +1,3 @@
-
 all: build run
 	@echo "No default action"
 
@@ -11,7 +10,7 @@ db-build:
 	./scripts/dockerctl.sh bluechords-db build db
 
 db-run:
-	./scripts/dockerctl.sh bluechords-db start
+	./scripts/dockerctl.sh bluechords-db start '-e MYSQL_ROOT_PASSWORD=root'
 
 db-stop:
 	./scripts/dockerctl.sh bluechords-db stop
@@ -27,6 +26,22 @@ db: db-build db-run
 ###################################################
 # API
 
+api-build:
+	./scripts/dockerctl.sh bluechords-api build api
+
+api-run:
+	./scripts/dockerctl.sh bluechords-api start '-v $(shell pwd)/api/src:/var/www/html/api'
+
+api-stop:
+	./scripts/dockerctl.sh bluechords-api stop
+
+api-rm: api-stop
+	./scripts/dockerctl.sh bluechords-api rm 
+
+api-ip:
+	docker inspect --format '{{ .NetworkSettings.IPAddress}}' bluechords-api
+
+api: api-build api-run
 
 
 
