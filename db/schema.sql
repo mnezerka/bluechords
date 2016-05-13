@@ -3,3 +3,11 @@ USE bc;
 
 CREATE USER 'bc'@'%' IDENTIFIED BY 'bc';
 GRANT ALL PRIVILEGES ON *.* TO 'bc'@'%' WITH GRANT OPTION;
+
+CREATE TABLE `songs` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `name` varchar(250) NOT NULL,
+      `data` text NOT NULL,
+      PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

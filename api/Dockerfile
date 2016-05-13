@@ -5,7 +5,8 @@ FROM ubuntu:14.04
 
 RUN export DEBIAN_FRONTEND=noninteractive && apt-get autoremove && apt-get install -y \
      apache2 \
-     php5
+     php5 \
+     php5-mysql
 
 # Expose ports
 EXPOSE 80

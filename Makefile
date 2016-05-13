@@ -1,25 +1,41 @@
+
+ # unique docker ids
+DB_ID=bluechords-db
+API_ID=bluechords-api
+APP_ID=bluechords-app
+
 all: build run
 	@echo "No default action"
 
 status:
 	@docker ps
 
+run:
+	@make db
+	@make api
+	@make app
+
+rm:
+	@make app-rm
+	@make api-rm
+	@make db-rm
+
 ###################################################
 # DB
 db-build:
-	./scripts/dockerctl.sh bluechords-db build db
+	@./scripts/dockerctl.sh $(DB_ID) build db
 
 db-run:
-	./scripts/dockerctl.sh bluechords-db start '-e MYSQL_ROOT_PASSWORD=root'
+	@./scripts/dockerctl.sh $(DB_ID) start '-e MYSQL_ROOT_PASSWORD=root'
 
 db-stop:
-	./scripts/dockerctl.sh bluechords-db stop
+	@./scripts/dockerctl.sh $(DB_ID) stop
 
 db-rm: db-stop
-	./scripts/dockerctl.sh bluechords-db rm 
+	@./scripts/dockerctl.sh $(DB_ID) rm 
 
 db-ip:
-	docker inspect --format '{{ .NetworkSettings.IPAddress}}' bluechords-app
+	@docker inspect --format '{{ .NetworkSettings.IPAddress}}' $(DB_ID)
 
 db: db-build db-run
 
@@ -27,19 +43,19 @@ db: db-build db-run
 # API
 
 api-build:
-	./scripts/dockerctl.sh bluechords-api build api
+	@./scripts/dockerctl.sh $(API_ID) build api
 
 api-run:
-	./scripts/dockerctl.sh bluechords-api start '-v $(shell pwd)/api/src:/var/www/html/api'
+	@./scripts/dockerctl.sh $(API_ID) start '--link $(DB_ID):host-db -v $(shell pwd)/api/src:/var/www/html/api'
 
 api-stop:
-	./scripts/dockerctl.sh bluechords-api stop
+	@./scripts/dockerctl.sh $(API_ID) stop
 
 api-rm: api-stop
-	./scripts/dockerctl.sh bluechords-api rm 
+	@./scripts/dockerctl.sh $(API_ID) rm 
 
 api-ip:
-	docker inspect --format '{{ .NetworkSettings.IPAddress}}' bluechords-api
+	@docker inspect --format '{{ .NetworkSettings.IPAddress}}' $(API_ID)
 
 api: api-build api-run
 
@@ -49,25 +65,25 @@ api: api-build api-run
 # Application
 
 app-build:
-	@$(call dockerBuild,bluechords-app,app)
+	@./scripts/dockerctl.sh $(APP_ID) build app
 
 app-run:
-	@$(call dockerStart,bluechords-app,-p 9161:8081 -v "`pwd`/app":/app)
+	@./scripts/dockerctl.sh $(APP_ID) start '-p 9161:8081 --link $(API_ID):host-api -v $(shell pwd)/app:/app'
 
 app-stop:
-	@$(call dockerStop,bluechords-app)
+	@./scripts/dockerctl.sh $(APP_ID) stop
 
 app-rm: app-stop
-	@$(call dockerRemove,bluechords-app)
+	@./scripts/dockerctl.sh $(APP_ID) rm 
 
 app-ip:
-	docker inspect --format '{{ .NetworkSettings.IPAddress}}' bluechords-app
+	@docker inspect --format '{{ .NetworkSettings.IPAddress}}' $(APP_ID)
 
 app: app-build app-run
 
 app-install:
-	docker exec bluechords-app bash -c "cd /app && npm install"
+	docker exec $(APP_ID) bash -c "cd /app && npm install"
 
 app-watch:
-	docker exec bluechords-app bash -c "cd /app && gulp watch"
+	docker exec $(APP_ID) bash -c "cd /app && gulp watch"
 

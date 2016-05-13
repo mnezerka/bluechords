@@ -23,30 +23,30 @@ case $CMD in
                 exit 1
         fi
 
-        echo "$(YELLOW)Building docker ${DOCKER_NAME} from directory ${1}$(NC)"
+        echo -e "${YELLOW}Building docker ${DOCKER_NAME} from directory ${1}${NC}"
         docker build -t ${DOCKER_NAME} ${1}
         ;;
 
     start)
-        echo "Starting docker ${DOCKER_NAME}"
+        echo -e "${GREEN}Starting docker ${DOCKER_NAME}${NC}"
         docker run -d --name ${DOCKER_NAME} ${1} ${DOCKER_NAME}
         ;;
 
     stop)
-        echo "Stopping docker ${DOCKER_NAME}"
+        echo -e "${RED}Stopping docker ${DOCKER_NAME}${NC}"
         if docker ps | grep -q ${DOCKER_NAME}; then
             docker stop ${DOCKER_NAME}
         fi
         ;; 
 
     rm)
-        echo "Removing docker ${DOCKER_NAME}"
+        echo -e "${RED}Removing docker ${DOCKER_NAME}${NC}"
         if docker ps -a | grep -q ${DOCKER_NAME}; then
  		    docker -l=fatal rm ${DOCKER_NAME}
         fi
         ;;
     *)
-        echo "unknown action $CMD"
+        echo "Unknown action $CMD"
         
 esac
 

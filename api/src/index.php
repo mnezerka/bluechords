@@ -1,11 +1,31 @@
 <?php
 require_once 'config.php';
+require_once 'lib/Db.php';
+require_once 'lib/Api.php';
 
  // Allow from any origin
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
     header('Access-Control-Allow-Credentials: true');
     header('Access-Control-Max-Age: 86400');    // cache for 1 day
+}
+
+function getApi() {
+    global $DB_HOST; 
+    global $DB_USER; 
+    global $DB_PASS; 
+    global $DB_NAME; 
+
+    $dbConfig = [ 
+        'host' => $DB_HOST,
+        'username' => $DB_USER,
+        'password' => $DB_PASS,
+        'database' => $DB_NAME
+    ];
+
+    $db = new DbMysql($dbConfig);
+    $api = new Api($db);
+    return $api;
 }
 
 function onError($header, $msg) {
@@ -59,13 +79,22 @@ function handleGet($ep) {
             if (!validateRequest()) onError403('Invalid authorization');
             phpinfo();
             break;
-    
+
+        case 'songs':
+            $api = getApi();
+            $songs = $api->getSongs();
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($songs);
+            break;
+     
         default:
             header("HTTP/1.0 404 Not Found");
             echo "Endpoint $ep does not exist";
             die();
     }
 }
+
+
 
 function main() {
     $ep = isset($_REQUEST['request']) ? $_REQUEST['request'] : null;
@@ -87,6 +116,10 @@ function main() {
     }
 }
 
-main();
+try {
+    main();
+} catch (Exception $e) {
+    onError500($e->getMessage());
+}
 
 ?>
