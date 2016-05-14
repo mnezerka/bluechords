@@ -13,6 +13,7 @@ import webpack from  'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import webpackDevConfig from './config/webpack.dev.js';
 import webpackProductConfig from './config/webpack.product.js';
+import process from 'process';
 
 function onBuild(done) {
     return function(err, stats) {
@@ -62,13 +63,14 @@ gulp.task('static:product', ['static'], () => {
 
 
 gulp.task('static:dev', ['static'], () => {         
+    let hostApi = process.env.HOST_API_PORT_80_TCP_ADDR;
     gulp.src('src/templates/dev.html')  
         .pipe(grename('index.html'))
         .pipe(gulp.dest('build/')); 
 
     gulp.src('config/config.js.tpl')  
         .pipe(grename('config.js'))
-        .pipe(replace('{{API_URL}}', 'http://localhost:9060/api/'))
+        .pipe(replace('{{API_URL}}', `http://${hostApi}/api/`))
         .pipe(gulp.dest('build/')); 
 });
 
