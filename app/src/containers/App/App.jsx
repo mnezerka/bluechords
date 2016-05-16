@@ -1,58 +1,10 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {Navbar, Nav, NavItem} from 'react-bootstrap';
-import {bindActionCreators} from 'redux';
-import * as actionCreatorsSong from 'actions/Song';
-import * as actionCreatorsSongs from 'actions/Songs';
-import brace from 'brace';
-import AceEditor from 'react-ace';
-import ChordProView from 'components/ChordProView';
-import SongsList from 'components/SongsList';
+import {Navbar, Nav, NavItem, Glyphicon} from 'react-bootstrap';
+//import brace from 'brace';
 import './App.styl';
 
-import 'brace/mode/java';
-import 'brace/theme/github';
-
-
-const mapStateToProps = (state) => ({
-    songStr: state.song.songStr,
-    songs: state.songs.data,
-});
-
-const mapActionsToProps = (dispatch) => ({
-    actionsSong: bindActionCreators(actionCreatorsSong, dispatch),
-    actionsSongs: bindActionCreators(actionCreatorsSongs, dispatch)
-});
-
-@connect(mapStateToProps, mapActionsToProps)
-export default class App extends React.Component{
-
-    static propTypes = {
-        actionsSong: React.PropTypes.object
-    }
-
-    componentWillMount() {
-        this.fetchSongs();
-    }
-
-    fetchSongs(col, asc, pageSize, page) {
-        this.props.actionsSongs.fetchSongs();
-    }
-
-    render() {
-
-        return (
-            <div className="bc-container">
-                <Navbar fluid>
-                    <Navbar.Header>
-                        <Navbar.Brand>
-                            BlueChords
-                        </Navbar.Brand>
-                    </Navbar.Header>
-                </Navbar>
-    
-                <div className="bc-content">
-                    {false && <AceEditor
+/*
+     {false && <AceEditor
                         ref="editor"
                         //width="100%"
                         //mode="java"
@@ -70,17 +22,50 @@ export default class App extends React.Component{
                         {this.props.songStr}
                     </ChordProView>}
 
-                    <SongsList
-                       songs={this.props.songs} />
-                </div>
 
+*/
+
+export default class App extends React.Component{
+
+    static propTypes = {
+        children: React.PropTypes.object,
+    }
+
+    render() {
+
+        return (
+            <div className="bc-container">
+                <Navbar fluid>
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            BlueChords
+                        </Navbar.Brand>
+                    </Navbar.Header>
+                </Navbar>
+
+                <div className="bc-content">
+
+                    <div className="bc-menu">
+                        <Nav bsStyle="pills" stacked activeKey={1} onSelect={this.onAction.bind(this)}>
+                            <NavItem eventKey="add" disabled={false}>
+                                <Glyphicon glyph="plus"/>{' '}Add Song 
+                            </NavItem>
+                        </Nav>
+                    </div>
+   
+                    {this.props.children}
+                </div>
             </div>
         )
     }
 
-    onChange(songStr) {
-        console.log(this.refs.editor.editor.session.getLength());
+    /*onChange(songStr) {
+        //console.log(this.refs.editor.editor.session.getLength());
         this.props.actionsSong.save(songStr);
+    }*/
+
+    onAction(action) {
+        console.log('action:', action);
     }
 }
 

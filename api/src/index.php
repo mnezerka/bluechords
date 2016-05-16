@@ -64,16 +64,16 @@ function handleOptions() {
 
 function handlePost($ep) {
 
-    switch ($ep) {
-   
+    switch ($ep[0]) {
+
         default:
-            onError404("Endpoint $ep does not exist");
+            onError404("Endpoint $ep[0] does not exist");
     }
 } 
 
 function handleGet($ep) {
 
-    switch ($ep) {
+    switch ($ep[0]) {
 
         case 'info':
             if (!validateRequest()) onError403('Invalid authorization');
@@ -86,10 +86,17 @@ function handleGet($ep) {
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($songs);
             break;
+
+        case 'song':
+            $api = getApi();
+            $songs = $api->getSong($ep[1]);
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($songs);
+            break;
      
         default:
             header("HTTP/1.0 404 Not Found");
-            echo "Endpoint $ep does not exist";
+            echo "Endpoint $ep[0] does not exist";
             die();
     }
 }
@@ -98,6 +105,9 @@ function handleGet($ep) {
 
 function main() {
     $ep = isset($_REQUEST['request']) ? $_REQUEST['request'] : null;
+
+    $ep = explode('/', $ep);
+
     switch($_SERVER['REQUEST_METHOD']) {
         case 'POST':
             handlePost($ep);

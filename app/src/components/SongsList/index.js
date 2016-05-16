@@ -1,4 +1,6 @@
 import React from 'react';
+import {Glyphicon} from 'react-bootstrap';
+import './SongsList.styl';
 
 class TableHeadItem extends React.Component {
     static propTypes = {
@@ -60,7 +62,7 @@ export class TableHeader extends React.Component {
 
     render() {
         return(
-            <div className="saas-table-header">
+            <div className="bc-table-header">
                 {this.props.children}
                 <span
                     className="glyphicon glyphicon-refresh"
@@ -76,26 +78,55 @@ class SongRow extends React.Component{
     static propTypes = {
         children: React.PropTypes.shape({
             name: React.PropTypes.string,
-        })
+        }),
+        onView: React.PropTypes.func,
+        onEdit: React.PropTypes.func,
+        onDelete: React.PropTypes.func,
     };
+
+    static defaultProps = {
+        onView: () => {},
+        onEdit: () => {},
+        onDelete: () => {}
+    }  
 
     render() {
         let song = this.props.children;
 
         return (
             <tr className="tr-basic">
-                <td className="td-basic">{song.name}</td>
+                <td
+                    className="td-basic"
+                    onClick={this.onItemClick.bind(this, song, 'view')}>
+                    {song.name}
+                </td>
+                <td className="td-basic bc-songs-list-actions">
+                    <Glyphicon glyph="pencil" onClick={this.onItemClick.bind(this, song, 'edit')} />
+                    {' '}
+                    <Glyphicon glyph="trash" onClick={this.onItemClick.bind(this, song, 'delete')} />
+                </td>
             </tr>
         );
     }
+
+    onItemClick(item, action) {
+        switch(action) {
+        case 'view':
+            this.props.onView(item);
+            break;
+        case 'edit':
+            this.props.onEdit(item);
+            break;
+        case 'delete':
+            this.props.onDelete(item);
+            break;
+        }   
+    }   
 } 
-
-
 
 export default class SongsList extends React.Component{
 
     render() {
-
         return (
             <div className="bc-songs-list">
                 this is list of songs
@@ -103,15 +134,16 @@ export default class SongsList extends React.Component{
         )
     }
 
-
     static propTypes = {
         songs: React.PropTypes.array,
         onSort: React.PropTypes.func,
         onPageChange: React.PropTypes.func,
+        onRefresh: React.PropTypes.func,
         sort: React.PropTypes.shape({
             asc: React.PropTypes.bool,
             col: React.PropTypes.string
         }), 
+        onView: React.PropTypes.func,
         isFetching: React.PropTypes.bool,
         page: React.PropTypes.number,
         pageSize: React.PropTypes.number,
@@ -121,6 +153,8 @@ export default class SongsList extends React.Component{
     static defaultProps = {
         data: [],
         sort: { asc: true, col: 'name' },
+        onRefresh: () => {},
+        onView: () => {},
         onSort: () => {},
         onPageChange: () => {},
         isFetching: false,
@@ -146,12 +180,18 @@ export default class SongsList extends React.Component{
                                 sort={this.props.sort}>
                                 Name 
                             </TableHeadItem>
+                            <th />
                         </tr>
                     </thead>
                     <tbody className="tbody-basic">
                         {this.props.songs !== null &&
                             this.props.songs.map((song) => {
-                                return (<SongRow key={song.id}>{song}</SongRow>)}          
+                                return (
+                                    <SongRow
+                                        key={song.id}
+                                        onView={this.props.onView}>
+                                        {song}
+                                    </SongRow>)}          
                             )
                         }
                     </tbody>                
@@ -159,7 +199,5 @@ export default class SongsList extends React.Component{
             </div>
         )
     } 
-
-
 }
 
