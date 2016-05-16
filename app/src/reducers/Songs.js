@@ -6,6 +6,7 @@ const initialState = {
     sortField: 'id',
     sortAsc: true,
     isFetching: false,
+    filter: null,
     pageSize: 20,
     page: 1,
     total: 0

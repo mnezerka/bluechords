@@ -7,7 +7,8 @@ GRANT ALL PRIVILEGES ON *.* TO 'bc'@'%' WITH GRANT OPTION;
 CREATE TABLE `songs` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `name` varchar(250) NOT NULL,
-      `data` text NOT NULL,
+      `artist` varchar(250) NOT NULL DEFAULT '',
+      `data` text NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

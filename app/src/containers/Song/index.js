@@ -33,11 +33,8 @@ export default class Song extends React.Component {
     render() {
         return(
             <div>
-                <div>Song preview</div>
-
                 {this.props.song !== null &&
                     <ChordProView>{this.props.song.data}</ChordProView>}
-                
             </div>
         );
     }

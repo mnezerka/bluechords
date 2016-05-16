@@ -8,7 +8,7 @@ class Api {
 
     function getSongs() {
         $result = [];
-        $rows = $this->_db->query('SELECT id, name FROM songs');
+        $rows = $this->_db->query('SELECT id, name, artist FROM songs ORDER BY name');
         while($row = $rows->fetch_assoc()) {
             $result[] = $row;
         }

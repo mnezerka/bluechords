@@ -10,6 +10,8 @@ import rootReducer from 'reducers';
 import App from 'containers/App';
 import Songs from 'containers/Songs';
 import Song from 'containers/Song';
+import SongsNav from 'containers/SongsNav';
+import BasicNav from 'containers/BasicNav';
 
 const logger = createLogger();
 
@@ -22,8 +24,8 @@ const store = createStore(
 
 const routes = ( 
     <Route path="/" component={App}>
-        <IndexRoute component={Songs}/>
-        <Route path="song/:songId" component={Song}/>
+        <IndexRoute components={{main: Songs, nav: SongsNav}}/>
+        <Route path="song/:songId" components={{main: Song, nav: BasicNav}}/>
     </Route>
 );
 

@@ -78,6 +78,7 @@ class SongRow extends React.Component{
     static propTypes = {
         children: React.PropTypes.shape({
             name: React.PropTypes.string,
+            artist: React.PropTypes.string,
         }),
         onView: React.PropTypes.func,
         onEdit: React.PropTypes.func,
@@ -100,6 +101,12 @@ class SongRow extends React.Component{
                     onClick={this.onItemClick.bind(this, song, 'view')}>
                     {song.name}
                 </td>
+                <td
+                    className="td-basic"
+                    onClick={this.onItemClick.bind(this, song, 'view')}>
+                    {song.artist}
+                </td>
+
                 <td className="td-basic bc-songs-list-actions">
                     <Glyphicon glyph="pencil" onClick={this.onItemClick.bind(this, song, 'edit')} />
                     {' '}
@@ -175,10 +182,17 @@ export default class SongsList extends React.Component{
                         <tr className="tr-basic">
                             <TableHeadItem
                                 className="th-basic th-sortable"
-                                sortField="id"
+                                sortField="name"
                                 onSort={this.props.onSort}
                                 sort={this.props.sort}>
                                 Name 
+                            </TableHeadItem>
+                            <TableHeadItem
+                                className="th-basic th-sortable"
+                                sortField="artist"
+                                onSort={this.props.onSort}
+                                sort={this.props.sort}>
+                                Artist
                             </TableHeadItem>
                             <th />
                         </tr>
