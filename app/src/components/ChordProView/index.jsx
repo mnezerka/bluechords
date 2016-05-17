@@ -4,6 +4,10 @@ import './ChordProView.styl';
 
 class Text extends React.Component {
 
+    static propTypes = {
+        children: React.PropTypes.string
+    }
+
     render() {
         let text = this.props.children;
         if (text === null || text.length === 0) {
@@ -13,8 +17,11 @@ class Text extends React.Component {
     }
 }
 
-
 class Chord extends React.Component {
+
+    static propTypes = {
+        children: React.PropTypes.string
+    }
 
     render() {
         let chord = this.props.children;
@@ -22,8 +29,13 @@ class Chord extends React.Component {
     }
 }
 
-
 class Row extends React.Component {
+
+    static propTypes = {
+        children: React.PropTypes.shape({
+            children: React.PropTypes.array
+        })
+    }
 
     renderChordRow() {
         let row = this.props.children;
@@ -61,13 +73,19 @@ class Row extends React.Component {
 
 class Verse extends React.Component {
 
+    static propTypes = {
+        children: React.PropTypes.shape({
+            children: React.PropTypes.array
+        })
+    }
+
     render() {
         let verse = this.props.children;
         let items = [];
         for (let rowIx = 0; rowIx < verse.children.length; rowIx++) {
             if (verse.children[rowIx] instanceof NodeRow) {
                 items.push(<Row>{verse.children[rowIx]}</Row>); 
-           }
+            }
         }
         return (<div className="bc-chordpro-view-verse">{items}</div>);
     }
@@ -75,29 +93,34 @@ class Verse extends React.Component {
 
 class Chorus extends React.Component {
 
+    static propTypes = {
+        children: React.PropTypes.shape({
+            children: React.PropTypes.array
+        })
+    }
+
     render() {
         let verse = this.props.children;
         let items = [];
         for (let rowIx = 0; rowIx < verse.children.length; rowIx++) {
             if (verse.children[rowIx] instanceof NodeRow) {
                 items.push(<Row>{verse.children[rowIx]}</Row>); 
-           }
+            }
         }
         return (<div className="bc-chordpro-view-chorus">{items}</div>);
     }
 }
 
-
 export default class ChordProView extends React.Component{
 
     static propTypes = {
+        transposeStep: React.PropTypes.number,
         children: React.PropTypes.string,
     }
 
-    render() {
 
+    render() {
         let song = null;
-        let error = null;
         try {
             let tokens = tokenize(this.props.children);
             song = parse(tokens);

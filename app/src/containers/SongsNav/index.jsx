@@ -6,6 +6,8 @@ import {Navbar, FormGroup, Button, FormControl} from 'react-bootstrap';
 
 const mapStateToProps = (state) => ({
     filter: state.songs.filter,
+    sortField: state.songs.sortField,
+    sortAsc: state.songs.sortAsc,
 });
 
 const mapActionsToProps = (dispatch) => ({
@@ -17,7 +19,16 @@ export default class SongsNav extends React.Component{
 
     static propTypes = {
         actionsSongs: React.PropTypes.object,
-        filter: React.PropTypes.string
+        filter: React.PropTypes.string,
+        sortField: React.PropTypes.string,
+        sortAsc: React.PropTypes.bool
+    }
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            filter: props.filter
+        }
     }
 
     render() {
@@ -30,24 +41,29 @@ export default class SongsNav extends React.Component{
                     <Navbar.Form pullLeft>
                         <FormGroup>
                             <FormControl
-                                value={this.props.filter}
+                                value={this.state.filter}
                                 type="text"
-                                placeholder="Search"
-                                onChange={this.onSearchChange.bind(this)} />
+                                placeholder="Filter"
+                                onChange={this.onFilterChange.bind(this)} />
                         </FormGroup>
                         {' '}
-                        <Button type="submit">Search</Button>
+                        <Button type="submit" onClick={this.onFilter.bind(this)}>Filter</Button>
                     </Navbar.Form>
                 </Navbar.Collapse>
             </Navbar>
         )
     }
 
-    onSearchChange(event) {
-        console.log(event.target.value);
-        this.props.actionsSongs.fetchSongs({filter: event.target.value});
+    onFilterChange(event) {
+        this.setState({filter: event.target.value});
     }
 
+    onFilter() {
+        this.props.actionsSongs.fetchSongs({
+            sortField: this.props.sortField,
+            sortAsc: this.props.sortAsc,
+            filter: this.state.filter});
+    }
 }
 
 

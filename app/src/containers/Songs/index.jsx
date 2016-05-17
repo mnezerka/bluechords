@@ -9,6 +9,9 @@ import SongsList from 'components/SongsList';
 
 const mapStateToProps = (state) => ({
     songs: state.songs.data,
+    filter: state.songs.filter,
+    sortField: state.songs.sortField,
+    sortAsc: state.songs.sortAsc
 });
 
 const mapActionsToProps = (dispatch) => ({
@@ -26,7 +29,10 @@ export default class App extends React.Component{
     static propTypes = {
         actionsSong: React.PropTypes.object,
         actionsSongs: React.PropTypes.object,
-        songs: React.PropTypes.array
+        songs: React.PropTypes.array,
+        filter: React.PropTypes.string,
+        sortField: React.PropTypes.string,
+        sortAsc: React.PropTypes.bool
     }
 
     constructor(props) {
@@ -38,11 +44,11 @@ export default class App extends React.Component{
     }
 
     componentWillMount() {
-        this.fetchSongs();
+        this.fetchSongs(this.props.sortField, this.props.sortAsc, this.props.filter);
     }
 
-    fetchSongs(sortField, sortAsc) {
-        this.props.actionsSongs.fetchSongs({sortField, sortAsc});
+    fetchSongs(sortField, sortAsc, filter) {
+        this.props.actionsSongs.fetchSongs({sortField, sortAsc, filter});
     }
 
     render() {
@@ -51,24 +57,25 @@ export default class App extends React.Component{
                 <SongsList
                     songs={this.props.songs}
                     onRefresh={this.onSongListRefresh.bind(this)}
-                    onView={this.onSongListView.bind(this)} />
+                    onSort={this.onSongListSort.bind(this)}
+                    onView={this.onSongListView.bind(this)}
+                    sortField={this.props.sortField}
+                    sortAsc={this.props.sortAsc}
+                    />
             </div>
         )
     }
 
     onSongListRefresh() {
-        this.fetchSongs();
+        this.fetchSongs(this.props.sortField, this.props.sortAsc, this.props.filter);
     }
 
     onSongListView(song) {
-        console.log('view song', song);
         this.context.router.push(`/song/${song.id}`);
-/*
-        this.setState({
-            action: ACT_PREVIEW,
-            actionData: song
-        });
-*/
+    }
+
+    onSongListSort(sortField, sortAsc) {
+        this.fetchSongs(sortField, sortAsc, this.props.filter);
     }
 
     onAction(action) {

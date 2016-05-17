@@ -5,8 +5,9 @@ import './SongsList.styl';
 class TableHeadItem extends React.Component {
     static propTypes = {
         onSort: React.PropTypes.func,
-        sort: React.PropTypes.object,
         sortField: React.PropTypes.string,
+        sortAsc: React.PropTypes.bool,
+        field: React.PropTypes.string,
         children: React.PropTypes.node,
         className: React.PropTypes.string
     };
@@ -17,20 +18,20 @@ class TableHeadItem extends React.Component {
 
     _sort() {
         if (this.props.onSort) {
-            if (this.props.sort.col === this.props.sortField) {
-                this.props.onSort(this.props.sortField, !this.props.sort.asc); // flip state
+            if (this.props.sortField === this.props.field) {
+                this.props.onSort(this.props.field, !this.props.sortAsc); // flip state
             } else {
-                this.props.onSort(this.props.sortField, true); // sort asc
+                this.props.onSort(this.props.field, true); // sort asc
             }
         }
     }
 
     render() {
         let ascStyle = {
-            display: ((this.props.sort.col === this.props.sortField && this.props.sort.asc) ? 'inline' : 'none')
+            display: ((this.props.sortField === this.props.field && this.props.sortAsc) ? 'inline' : 'none')
         };
         let descStyle = {
-            display: ((this.props.sort.col === this.props.sortField && !this.props.sort.asc) ? 'inline' : 'none')
+            display: ((this.props.sortField === this.props.field && !this.props.sortAsc) ? 'inline' : 'none')
         };
 
         return(
@@ -146,10 +147,8 @@ export default class SongsList extends React.Component{
         onSort: React.PropTypes.func,
         onPageChange: React.PropTypes.func,
         onRefresh: React.PropTypes.func,
-        sort: React.PropTypes.shape({
-            asc: React.PropTypes.bool,
-            col: React.PropTypes.string
-        }), 
+        sortAsc: React.PropTypes.bool,
+        sortField: React.PropTypes.string,
         onView: React.PropTypes.func,
         isFetching: React.PropTypes.bool,
         page: React.PropTypes.number,
@@ -159,7 +158,8 @@ export default class SongsList extends React.Component{
 
     static defaultProps = {
         data: [],
-        sort: { asc: true, col: 'name' },
+        sortAsc: true,
+        sortField: 'name',
         onRefresh: () => {},
         onView: () => {},
         onSort: () => {},
@@ -182,16 +182,18 @@ export default class SongsList extends React.Component{
                         <tr className="tr-basic">
                             <TableHeadItem
                                 className="th-basic th-sortable"
-                                sortField="name"
+                                field="name"
                                 onSort={this.props.onSort}
-                                sort={this.props.sort}>
+                                sortField={this.props.sortField}
+                                sortAsc={this.props.sortAsc}>
                                 Name 
                             </TableHeadItem>
                             <TableHeadItem
                                 className="th-basic th-sortable"
-                                sortField="artist"
+                                field="artist"
                                 onSort={this.props.onSort}
-                                sort={this.props.sort}>
+                                sortField={this.props.sortField}
+                                sortAsc={this.props.sortAsc}>
                                 Artist
                             </TableHeadItem>
                             <th />

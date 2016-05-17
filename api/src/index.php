@@ -81,8 +81,23 @@ function handleGet($ep) {
             break;
 
         case 'songs':
+            $sortField = 'name';
+            $sortAsc = true;
+            if (isset($_GET['ordering']) && strlen($_GET['ordering']) > 0) {
+                $sortField = $_GET['ordering'];
+                if ($sortField[0] == '-') {
+                    $sortAsc = false;
+                    $sortField = substr($sortField, 1);
+                } 
+            };
+
+            $filter = null;
+            if (isset($_GET['filter']) && strlen($_GET['filter']) > 0) {
+                $filter = $_GET['filter'];
+            };
+
             $api = getApi();
-            $songs = $api->getSongs();
+            $songs = $api->getSongs($sortField, $sortAsc, $filter);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($songs);
             break;
