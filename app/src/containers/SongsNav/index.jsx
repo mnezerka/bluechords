@@ -14,8 +14,7 @@ const mapActionsToProps = (dispatch) => ({
     actionsSongs: bindActionCreators(actionCreatorsSongs, dispatch)
 });
 
-@connect(mapStateToProps, mapActionsToProps)
-export default class SongsNav extends React.Component{
+export default class SongNav extends React.Component{
 
     static propTypes = {
         actionsSongs: React.PropTypes.object,

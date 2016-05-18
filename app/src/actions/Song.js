@@ -8,6 +8,14 @@ export function save(songStr) {
     });
 }
 
+export const SONG_TRANSPOSE = 'SONG_TRANSPOSE';
+export function transpose(transposeStep) {
+    return({
+        type: SONG_TRANSPOSE,
+        payload: transposeStep
+    });
+}
+
 export const SONG_FETCH = 'SONG_FETCH';
 export const SONG_FETCH_SUCCESS = 'SONG_FETCH_SUCCESS';
 export const SONG_FETCH_FAIL = 'SONG_FETCH_FAIL';

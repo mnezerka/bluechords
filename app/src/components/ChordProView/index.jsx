@@ -1,5 +1,6 @@
 import React from 'react';
 import {tokenize, parse, NodeChord, NodeChorus, NodeRow, NodeVerse} from 'utils/ChordPro';
+import {transpose} from 'utils/ChordProUtils';
 import './ChordProView.styl';
 
 class Text extends React.Component {
@@ -124,6 +125,9 @@ export default class ChordProView extends React.Component{
         try {
             let tokens = tokenize(this.props.children);
             song = parse(tokens);
+            if (this.props.transposeStep !== 0) {
+                transpose(song, this.props.transposeStep);
+            }
         } catch (e) {
             return(<div className="bc-chordpro-view"> {e}</div>);
         }

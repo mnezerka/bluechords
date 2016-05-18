@@ -11,43 +11,35 @@ export class NodeDoc {
         this.title = null,
         this.subTitle = null 
     }
-};
+}
 
-export class NodeMeta extends Node { };
-export class NodeHead extends Node { };
-export class NodeBody extends Node { };
-export class NodeComment extends Node { };
+export class NodeMeta extends Node { }
+export class NodeHead extends Node { }
+export class NodeBody extends Node { }
+export class NodeComment extends Node { }
 export class NodeChord extends Node {
     constructor(chord = null) {
         super();
         this.chord = chord
         this.text = '';
-    };
+    }
 }
-export class NodeRow extends Node { };
-export class NodeVerse extends Node { };
-export class NodeChorus extends Node { };
-
-class Meta {};
-
-class StackMark {};
-class LineBeginType extends StackMark {};
-class VerseBeginType extends StackMark {};
-class TabBeginType extends StackMark {};
-class ChorusBeginType extends StackMark {};
+export class NodeRow extends Node { }
+export class NodeVerse extends Node { }
+export class NodeChorus extends Node { }
+export class NodeTab extends Node { }
 
 var LineBegin = {type:'line-begin'};
 var VerseBegin = {type:'verse-begin'};
-var TabBegin = {type:'tab-begin'};
 var ChorusBegin = {type:'chorus-begin'};
 
 function ltrim(str) {
-    return str.replace(/^\s+/,"");
+    return str.replace(/^\s+/, '');
 }
 
-function arrayExtend(arr, other_arr) {
+function arrayExtend(arr, otherArr) {
     // you should include a test to check whether other_array really is an array
-    other_arr.forEach(function(v) {arr.push(v)}, arr);
+    otherArr.forEach(function(v) {arr.push(v)}, arr);
 }
 
 
@@ -65,12 +57,13 @@ function isComment(n) {
 Scan stack "s" for "t", pop and return between "t" and end of stack.
 If item "t" is not found, then restore stack and return empty list.
 */
-function pop_to_object(s, t) {
+function popToObject(s, t) {
     //console.log('------------------------------');
     //console.log('pop to object enter stack:', s, ' look for:',  t);
     let result = [];
-    if (s.length === 0)
+    if (s.length === 0) {
         return result;
+    }
 
     let foundPos = null;
     for (let i = s.length - 1; i >= 0; i--) {
@@ -108,7 +101,7 @@ export function parse(tokens) {
 
         switch (ttype) {
         case CHP_TOKEN_DIRECTIVE:
-            directive_handler(tokens, stack, doc, ttype, tvalue)
+            directiveHandler(tokens, stack, doc, ttype, tvalue)
             break;
         case CHP_TOKEN_COMMENT:
             stack.push(new Node(Node.EL_TYPE_COMMENT, tvalue));
@@ -135,7 +128,7 @@ export function parse(tokens) {
             break;
         case CHP_TOKEN_EOL:
         case CHP_TOKEN_EOF:
-            eol_handler(tokens, stack, doc, ttype, tvalue)
+            eolHandler(tokens, stack, doc, ttype, tvalue)
             break;
         default:
             throw `Unrecognized token ${ttype} (${tvalue}) at line xxx`;
@@ -153,12 +146,12 @@ Parser handler of end-of-line and end-of-file events
 This is largely where elements are moved from the stack and put into
 the document.
 */
-function eol_handler(tokens, stack, doc, ttype, tvalue) {
+function eolHandler(tokens, stack, doc) {
 
     //console.log('doc is ', doc);
    
     // get list of object on current line
-    let line = pop_to_object(stack, LineBegin)
+    let line = popToObject(stack, LineBegin)
     
     if (line.length > 0) {
         let allComments = true;
@@ -193,7 +186,7 @@ function eol_handler(tokens, stack, doc, ttype, tvalue) {
         // if we're in a chrous, stay in chorus mode
         // else, stop verse and start new verse
         if (!inChorus) {
-            let verseItems = pop_to_object(stack, VerseBegin)
+            let verseItems = popToObject(stack, VerseBegin)
             
             if (verseItems.length > 0) {
                 let v = new NodeVerse();
@@ -212,7 +205,7 @@ function eol_handler(tokens, stack, doc, ttype, tvalue) {
 }
 
 // Parser handler for all directives'
-function directive_handler(tokens, stack, doc, ttype, tvalue) {
+function directiveHandler(tokens, stack, doc, ttype, tvalue) {
     let tag = tvalue;
     let arg = '';
     if (tvalue.indexOf(':') > 0) {
@@ -239,10 +232,10 @@ function directive_handler(tokens, stack, doc, ttype, tvalue) {
     } else if (['soc', 'start_of_chorus'].indexOf(tag) >= 0) {
         // close the current verse, if any, then start a chorus
         if (arg.length > 0) { throw `{${tag}} directive needs no argument (${arg})`; }
-        pop_to_object(stack, LineBegin)
-        let verse = pop_to_object(stack, VerseBegin)
+        popToObject(stack, LineBegin)
+        let verse = popToObject(stack, VerseBegin)
         if (verse.length > 0) {
-            v = new NodeVerse();
+            let v = new NodeVerse();
             stack.push(v);
             arrayExtend(v.children, verse);
         }
@@ -252,10 +245,10 @@ function directive_handler(tokens, stack, doc, ttype, tvalue) {
         // close the current chorus, but don't start a verse
         // - that's done after an sol token
         if (arg.length > 0) { throw `{${tag}} directive needs no argument (${arg})`; }
-        pop_to_object(stack, LineBegin)
+        popToObject(stack, LineBegin)
         let c = new NodeChorus();
         doc.body.push(c);
-        let chorus = pop_to_object(stack, ChorusBegin)
+        let chorus = popToObject(stack, ChorusBegin)
         arrayExtend(c.children, chorus);
 
     } else if (tag === 'tab') {
