@@ -25,7 +25,7 @@ const store = createStore(
 const routes = ( 
     <Route path="/" component={App}>
         <IndexRoute components={{main: Songs, nav: SongsNav}}/>
-        <Route path="song/:songId" components={{main: Song, nav: BasicNav}}/>
+        <Route path="songs/:songId" components={{main: Song, nav: BasicNav}}/>
     </Route>
 );
 
