@@ -66,6 +66,24 @@ function handlePost($ep) {
 
     switch ($ep[0]) {
 
+        case 'songs':
+            $api = getApi();
+            if (!isset($ep[1])) {
+                onError400("Missing song id in endpoint path");
+            }
+            $songData = json_decode(file_get_contents('php://input'));
+
+            if (!isset($songData->name) ||
+                !isset($songData->artist) ||
+                !isset($songData->data)) {
+                onError400('missing name, artist or data attribute');
+            } 
+
+            $song = $api->saveSong($ep[1], $songData);
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($song);
+            break;
+
         default:
             onError404("Endpoint $ep[0] does not exist");
     }
@@ -104,9 +122,9 @@ function handleGet($ep) {
 
         case 'song':
             $api = getApi();
-            $songs = $api->getSong($ep[1]);
+            $song = $api->getSong($ep[1]);
             header('Content-type: application/json; charset=utf-8');
-            echo json_encode($songs);
+            echo json_encode($song);
             break;
      
         default:

@@ -3,27 +3,6 @@ import {Navbar, Nav, NavItem, FormGroup, Button, FormControl, Glyphicon} from 'r
 //import brace from 'brace';
 import './App.styl';
 
-/*
-     {false && <AceEditor
-                        ref="editor"
-                        //width="100%"
-                        //mode="java"
-                        theme="github"
-                        fontSize={14}
-                        showPrintMargin={false}
-                        showGutter={false}
-                        value={this.props.songStr}
-                        onChange={this.onChange.bind(this)}
-                        name="bc-song-editor"
-                        editorProps={{blockScrolling: true}}
-                    />}
-
-                    {false && <ChordProView>
-                        {this.props.songStr}
-                    </ChordProView>}
-
-
-*/
 
 const ACT_SONGS = 'songs';
 const ACT_ADD = 'add';
@@ -68,10 +47,6 @@ export default class App extends React.Component{
         )
     }
 
-    /*onChange(songStr) {
-        //console.log(this.refs.editor.editor.session.getLength());
-        this.props.actionsSong.save(songStr);
-    }*/
 
     onAction(action) {
         console.log('action:', action);

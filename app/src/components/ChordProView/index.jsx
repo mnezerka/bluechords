@@ -1,5 +1,6 @@
 import React from 'react';
 import {tokenize, parse, NodeChord, NodeChorus, NodeRow, NodeVerse} from 'utils/ChordPro';
+import {transpose} from 'utils/ChordProUtils';
 import './ChordProView.styl';
 
 class Text extends React.Component {
@@ -63,8 +64,10 @@ class Row extends React.Component {
     render() {
         return (
             <table className="bc-chordpro-view-row">
-                <tr>{this.renderChordRow()}</tr>
-                <tr>{this.renderTextRow()}</tr>
+                <tbody>
+                    <tr>{this.renderChordRow()}</tr>
+                    <tr>{this.renderTextRow()}</tr>
+                </tbody>
             </table>
         );
     }
@@ -118,12 +121,20 @@ export default class ChordProView extends React.Component{
         children: React.PropTypes.string,
     }
 
+    static defaultProps = {
+        transposeStep: 0
+    }
 
     render() {
+        console.log(this.props);
+
         let song = null;
         try {
             let tokens = tokenize(this.props.children);
             song = parse(tokens);
+            if (this.props.transposeStep !== 0) {
+                transpose(song, this.props.transposeStep);
+            }
         } catch (e) {
             return(<div className="bc-chordpro-view"> {e}</div>);
         }

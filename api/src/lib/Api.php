@@ -35,13 +35,26 @@ class Api {
 
     function getSong($songId) {
         $result = [];
-        $query = sprintf("SELECT id, name, data FROM songs WHERE id='%d'", (int)$songId);
+        $query = sprintf("SELECT id, name, artist, data FROM songs WHERE id=%d", (int)$songId);
         $rows = $this->_db->query($query);
         if (mysqli_num_rows($rows) == 0) {
             throw new Exception('Song not found');
         }
         $row = $rows->fetch_assoc();
         return $row;
+    }
+
+    function saveSong($songId, $song) {
+        $result = [];
+        $query = sprintf("UPDATE songs SET name='%s', artist='%s', data='%s' WHERE id=%d",
+            $this->_db->escapeString($song->name),
+            $this->_db->escapeString($song->artist),
+            $this->_db->escapeString($song->data),
+            (int)$songId);
+        //var_dump($query);
+        $this->_db->query($query);
+        $song = $this->getSong($songId);
+        return $song; 
     }
 
 }

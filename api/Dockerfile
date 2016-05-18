@@ -3,7 +3,7 @@ FROM ubuntu:14.04
 # Update the repository and install necessary tools
 #RUN apt-get update && apt-get install -y \
 
-RUN export DEBIAN_FRONTEND=noninteractive && apt-get autoremove && apt-get install -y \
+RUN apt-get autoremove && apt-get update && apt-get install -y \
      apache2 \
      php5 \
      php5-mysql

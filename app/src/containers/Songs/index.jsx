@@ -71,7 +71,7 @@ export default class App extends React.Component{
     }
 
     onSongListView(song) {
-        this.context.router.push(`/song/${song.id}`);
+        this.context.router.push(`/songs/${song.id}`);
     }
 
     onSongListSort(sortField, sortAsc) {
