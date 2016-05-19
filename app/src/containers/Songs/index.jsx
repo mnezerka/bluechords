@@ -59,6 +59,7 @@ export default class App extends React.Component{
                     onRefresh={this.onSongListRefresh.bind(this)}
                     onSort={this.onSongListSort.bind(this)}
                     onView={this.onSongListView.bind(this)}
+                    onEdit={this.onSongListEdit.bind(this)}
                     sortField={this.props.sortField}
                     sortAsc={this.props.sortAsc}
                     />
@@ -72,6 +73,10 @@ export default class App extends React.Component{
 
     onSongListView(song) {
         this.context.router.push(`/songs/${song.id}`);
+    }
+
+    onSongListEdit(song) {
+        this.context.router.push(`/songs/${song.id}/edit`);
     }
 
     onSongListSort(sortField, sortAsc) {

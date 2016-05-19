@@ -14,7 +14,7 @@ import SongEdit from 'containers/SongEdit';
 import SongEditNav from 'containers/SongEditNav';
 import SongsNav from 'containers/SongsNav';
 import SongNav from 'containers/SongNav';
-import BasicNav from 'containers/BasicNav';
+//import BasicNav from 'containers/BasicNav';
 
 const logger = createLogger();
 
@@ -26,7 +26,7 @@ const store = createStore(
 );
 
 const routes = ( 
-    <Route path="/" component={App}>
+    <Route path={config.path} component={App}>     //eslint-disable-line no-undef
         <IndexRoute components={{main: Songs, nav: SongsNav}}/>
         <Route path="songs/:songId" components={{main: Song, nav: SongNav}}/>
         <Route path="songs/:songId/edit" components={{main: SongEdit, nav: SongEditNav}}/>

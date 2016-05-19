@@ -1,5 +1,5 @@
 import {createReducer} from 'utils';
-import {SONG_SAVE, SONG_TRANSPOSE, SONG_FETCH,
+import {SONG_SET_DATA, SONG_SET_INFO, SONG_TRANSPOSE, SONG_FETCH,
      SONG_FETCH_SUCCESS, SONG_PUSH, SONG_PUSH_SUCCESS} from 'actions/Song';
 
 const initialState = {
@@ -11,11 +11,9 @@ const initialState = {
 
 export default createReducer(initialState, {
 
-    [SONG_SAVE]: (state, payload) => {
+    [SONG_SET_DATA]: (state, payload) => {
         // do nothing if no song is being edited
-        if (state.song === null) {
-            return state;
-        }
+        if (state.song === null) { return state; }
 
         // set new song data
         let newSong = Object.assign({}, state.song, {
@@ -26,6 +24,22 @@ export default createReducer(initialState, {
             isModified: true
         });
     },
+
+    [SONG_SET_INFO]: (state, payload) => {
+        // do nothing if no song is being edited
+        if (state.song === null) { return state; }
+
+        // set new song info 
+        let newSong = Object.assign({}, state.song, {
+            name: payload.name,
+            artist: payload.artist
+        });
+        return Object.assign({}, state, {
+            song: newSong,
+            isModified: true
+        });
+    },
+
 
     [SONG_TRANSPOSE]: (state, payload) => {
         return Object.assign({}, state, {

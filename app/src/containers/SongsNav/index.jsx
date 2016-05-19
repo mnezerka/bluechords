@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actionCreatorsSongs from 'actions/Songs';
-import {Navbar, FormGroup, Button, FormControl} from 'react-bootstrap';
+import {Navbar, InputGroup, FormGroup, Glyphicon, FormControl} from 'react-bootstrap';
 
 const mapStateToProps = (state) => ({
     filter: state.songs.filter,
@@ -14,6 +14,7 @@ const mapActionsToProps = (dispatch) => ({
     actionsSongs: bindActionCreators(actionCreatorsSongs, dispatch)
 });
 
+@connect(mapStateToProps, mapActionsToProps)
 export default class SongNav extends React.Component{
 
     static propTypes = {
@@ -30,6 +31,10 @@ export default class SongNav extends React.Component{
         }
     }
 
+    componentWilReceiveProps(nextProps) {
+        this.setState({filter: nextProps.filter});
+    }
+
     render() {
         return (
             <Navbar fluid>
@@ -37,16 +42,20 @@ export default class SongNav extends React.Component{
                     <Navbar.Brand>Songs</Navbar.Brand>
                 </Navbar.Header>
                 <Navbar.Collapse>
-                    <Navbar.Form pullLeft>
+                    <Navbar.Form pullRight>
                         <FormGroup>
-                            <FormControl
-                                value={this.state.filter}
-                                type="text"
-                                placeholder="Filter"
-                                onChange={this.onFilterChange.bind(this)} />
+                            <InputGroup>
+                                <FormControl
+                                    value={this.state.filter}
+                                    type="text"
+                                    placeholder="Filter"
+                                    onChange={this.onFilterChange.bind(this)} />
+                                <InputGroup.Addon
+                                    onClick={this.onFilter.bind(this)}>
+                                    <Glyphicon glyph="search" />
+                                </InputGroup.Addon>
+                            </InputGroup>
                         </FormGroup>
-                        {' '}
-                        <Button type="submit" onClick={this.onFilter.bind(this)}>Filter</Button>
                     </Navbar.Form>
                 </Navbar.Collapse>
             </Navbar>

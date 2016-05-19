@@ -1,10 +1,18 @@
 import {CALL_API} from 'redux-api-middleware';
 
-export const SONG_SAVE = 'SONG_SAVE';
-export function save(songStr) {
+export const SONG_SET_DATA = 'SONG_SET_DATA';
+export function setData(data) {
     return({
-        type: SONG_SAVE,
-        payload: songStr 
+        type: SONG_SET_DATA,
+        payload: data 
+    });
+}
+
+export const SONG_SET_INFO = 'SONG_SET_INFO';
+export function setInfo(song) {
+    return({
+        type: SONG_SET_INFO,
+        payload: song 
     });
 }
 

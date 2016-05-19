@@ -27,10 +27,11 @@ export default class SongNav extends React.Component{
     }
 
     render() {
+        let songName = this.props.song !== null ? this.props.song.name : '';
         return (
             <Navbar fluid>
                 <Navbar.Header>
-                    <Navbar.Brand>Song</Navbar.Brand>
+                    <Navbar.Brand>Song {songName}</Navbar.Brand>
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Navbar.Form pullRight>

@@ -150,6 +150,8 @@ export default class SongsList extends React.Component{
         sortAsc: React.PropTypes.bool,
         sortField: React.PropTypes.string,
         onView: React.PropTypes.func,
+        onEdit: React.PropTypes.func,
+        onDelete: React.PropTypes.func,
         isFetching: React.PropTypes.bool,
         page: React.PropTypes.number,
         pageSize: React.PropTypes.number,
@@ -162,6 +164,8 @@ export default class SongsList extends React.Component{
         sortField: 'name',
         onRefresh: () => {},
         onView: () => {},
+        onEdit: () => {},
+        onDelete: () => {},
         onSort: () => {},
         onPageChange: () => {},
         isFetching: false,
@@ -205,7 +209,9 @@ export default class SongsList extends React.Component{
                                 return (
                                     <SongRow
                                         key={song.id}
-                                        onView={this.props.onView}>
+                                        onView={this.props.onView}
+                                        onEdit={this.props.onEdit}
+                                        onDelete={this.props.onDelete}>
                                         {song}
                                     </SongRow>)}          
                             )

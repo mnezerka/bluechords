@@ -63,7 +63,7 @@ export default class SongEdit extends React.Component {
 
     onChange(songStr) {
         //console.log(this.refs.editor.editor.session.getLength());
-        this.props.actionsSong.save(songStr);
+        this.props.actionsSong.setData(songStr);
     }
 
 }
