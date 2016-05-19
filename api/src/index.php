@@ -2,6 +2,7 @@
 require_once 'config.php';
 require_once 'lib/Db.php';
 require_once 'lib/Api.php';
+require_once 'lib/Auth.php';
 
  // Allow from any origin
 if (isset($_SERVER['HTTP_ORIGIN'])) {
@@ -63,8 +64,34 @@ function handleOptions() {
 }
 
 function handlePost($ep) {
+    global $BLUECHORDS_SECRET;
+    global $BLUECHORDS_USERS;
 
     switch ($ep[0]) {
+
+        case 'auth':
+            $data = json_decode(file_get_contents('php://input'));
+            if (!isset($data->username) || !isset($data->password)) {
+                onError400('missing username or password');
+            };
+
+
+            if (!Auth::userExists($data->username)) {
+                onError403('unknown user');
+            };
+
+            if (!Auth::userIsValid($data->username, $data->password)) {
+                onError403('invalid password');
+            };
+
+            $token = Auth::getToken($data->username);
+            $response = array(
+                'token' => $token
+            );
+
+            header('Content-type: application/json');
+            echo json_encode($response);
+            break;
 
         case 'songs':
             $api = getApi();

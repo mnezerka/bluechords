@@ -19,6 +19,9 @@ export default class App extends React.Component{
     }
 
     render() {
+        if (this.props.location.pathname === '/login') {
+            return this.props.main;
+        }
 
         return (
             <div className="bc-container">

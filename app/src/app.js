@@ -14,7 +14,9 @@ import SongEdit from 'containers/SongEdit';
 import SongEditNav from 'containers/SongEditNav';
 import SongsNav from 'containers/SongsNav';
 import SongNav from 'containers/SongNav';
+import Login from 'containers/Login';
 //import BasicNav from 'containers/BasicNav';
+import requireAuth from 'components/AuthenticatedComponent';
 
 const logger = createLogger();
 
@@ -29,7 +31,8 @@ const routes = (
     <Route path={config.path} component={App}>     //eslint-disable-line no-undef
         <IndexRoute components={{main: Songs, nav: SongsNav}}/>
         <Route path="songs/:songId" components={{main: Song, nav: SongNav}}/>
-        <Route path="songs/:songId/edit" components={{main: SongEdit, nav: SongEditNav}}/>
+        <Route path="songs/:songId/edit" components={{main: requireAuth(SongEdit), nav: SongEditNav}}/>
+        <Route path="login" components={{main: Login, nav: null}}/>
     </Route>
 );
 
