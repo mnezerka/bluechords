@@ -11,7 +11,8 @@ const mapStateToProps = (state) => ({
     songs: state.songs.data,
     filter: state.songs.filter,
     sortField: state.songs.sortField,
-    sortAsc: state.songs.sortAsc
+    sortAsc: state.songs.sortAsc,
+    isAuthenticated: state.auth.isAuthenticated
 });
 
 const mapActionsToProps = (dispatch) => ({
@@ -32,7 +33,12 @@ export default class App extends React.Component{
         songs: React.PropTypes.array,
         filter: React.PropTypes.string,
         sortField: React.PropTypes.string,
-        sortAsc: React.PropTypes.bool
+        sortAsc: React.PropTypes.bool,
+        isAuthenticated: React.PropTypes.bool 
+    }
+
+    static defaultProps = {
+        isAuthenticated: false
     }
 
     constructor(props) {
@@ -56,6 +62,7 @@ export default class App extends React.Component{
             <div className="bc-page bc-songs">
                 <SongsList
                     songs={this.props.songs}
+                    allowEdit={this.props.isAuthenticated}
                     onRefresh={this.onSongListRefresh.bind(this)}
                     onSort={this.onSongListSort.bind(this)}
                     onView={this.onSongListView.bind(this)}

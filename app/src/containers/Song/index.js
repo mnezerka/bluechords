@@ -20,7 +20,7 @@ export default class Song extends React.Component {
         actionsSong: React.PropTypes.object,
         song: React.PropTypes.object,
         params: React.PropTypes.object,
-        transposeStep: React.PropTypes.number
+        transposeStep: React.PropTypes.number,
     };
 
     static defaultProps = {

@@ -84,12 +84,14 @@ class SongRow extends React.Component{
         onView: React.PropTypes.func,
         onEdit: React.PropTypes.func,
         onDelete: React.PropTypes.func,
+        allowEdit: React.PropTypes.bool,
     };
 
     static defaultProps = {
         onView: () => {},
         onEdit: () => {},
-        onDelete: () => {}
+        onDelete: () => {},
+        allowEdit: false
     }  
 
     render() {
@@ -108,11 +110,12 @@ class SongRow extends React.Component{
                     {song.artist}
                 </td>
 
+                {this.props.allowEdit &&
                 <td className="td-basic bc-songs-list-actions">
                     <Glyphicon glyph="pencil" onClick={this.onItemClick.bind(this, song, 'edit')} />
                     {' '}
                     <Glyphicon glyph="trash" onClick={this.onItemClick.bind(this, song, 'delete')} />
-                </td>
+                </td>}
             </tr>
         );
     }
@@ -145,7 +148,6 @@ export default class SongsList extends React.Component{
     static propTypes = {
         songs: React.PropTypes.array,
         onSort: React.PropTypes.func,
-        onPageChange: React.PropTypes.func,
         onRefresh: React.PropTypes.func,
         sortAsc: React.PropTypes.bool,
         sortField: React.PropTypes.string,
@@ -153,9 +155,7 @@ export default class SongsList extends React.Component{
         onEdit: React.PropTypes.func,
         onDelete: React.PropTypes.func,
         isFetching: React.PropTypes.bool,
-        page: React.PropTypes.number,
-        pageSize: React.PropTypes.number,
-        total: React.PropTypes.number
+        allowEdit: React.PropTypes.bool
     }
 
     static defaultProps = {
@@ -167,11 +167,8 @@ export default class SongsList extends React.Component{
         onEdit: () => {},
         onDelete: () => {},
         onSort: () => {},
-        onPageChange: () => {},
         isFetching: false,
-        page: 1,
-        pageSize: 30,
-        total: 0
+        allowEdit: false
     }  
     
     render() {
@@ -200,7 +197,7 @@ export default class SongsList extends React.Component{
                                 sortAsc={this.props.sortAsc}>
                                 Artist
                             </TableHeadItem>
-                            <th />
+                            {this.props.allowEdit && <th />}
                         </tr>
                     </thead>
                     <tbody className="tbody-basic">

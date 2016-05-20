@@ -24,6 +24,10 @@ const mapActionsToProps = (dispatch) => ({
 @connect(mapStateToProps, mapActionsToProps)
 export default class LoginPage extends React.Component {
 
+    static contextTypes = {
+        router: React.PropTypes.object.isRequired
+    }
+
     static propTypes = {
         isAuthenticating: React.PropTypes.bool,
         statusText: React.PropTypes.string,
@@ -101,9 +105,8 @@ export default class LoginPage extends React.Component {
         this.props.actions.loginUser(
             this.state.login,
             this.state.password,
-            config.path).then((x) => {
-                console.log('yes', x)
-            });
+            this.context.router,
+            config.path);
     }
 }
 

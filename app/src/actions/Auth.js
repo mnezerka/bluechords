@@ -4,7 +4,7 @@ export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
 export const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL';
 
-export function loginUser(username, password, redirect=config.path) {
+export function loginUser(username, password, router, redirect=config.path) {
     return (dispatch) => {
         dispatch({[CALL_API]: {
             endpoint: config.api + 'auth',    //eslint-disable-line no-undef
@@ -24,7 +24,7 @@ export function loginUser(username, password, redirect=config.path) {
             switch (action.type) {
             case LOGIN_USER_SUCCESS:
                 localStorage.setItem('token', action.payload.token);
-                //TODO dispatch(push(redirect));
+                router.push(redirect);
                 break;
             case LOGIN_USER_FAIL:
                 localStorage.removeItem('token');

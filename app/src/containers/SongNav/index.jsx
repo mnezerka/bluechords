@@ -7,6 +7,7 @@ import {Navbar, FormGroup, DropdownButton, Button, MenuItem} from 'react-bootstr
 const mapStateToProps = (state) => ({
     song: state.song.song,
     transposeStep: state.song.transposeStep,
+    isAuthenticated: state.auth.isAuthenticated
 });
 
 const mapActionsToProps = (dispatch) => ({
@@ -24,6 +25,11 @@ export default class SongNav extends React.Component{
         actionsSong: React.PropTypes.object,
         transposeStep: React.PropTypes.number,
         song: React.PropTypes.object,
+        isAuthenticated: React.PropTypes.bool 
+    }
+
+    static defaultProps = {
+        isAuthenticated: false
     }
 
     render() {
@@ -39,8 +45,8 @@ export default class SongNav extends React.Component{
                             <TransposeCtrl
                                 transposeStep={this.props.transposeStep}
                                 onSelect={this.onTranspose.bind(this)}/>
-                            {' '}
-                            <Button onClick={this.onEdit.bind(this)}>Edit</Button>
+                            {this.props.isAuthenticated && ' '}
+                            {this.props.isAuthenticated && <Button onClick={this.onEdit.bind(this)}>Edit</Button>}
                         </FormGroup>
                     </Navbar.Form>
                 </Navbar.Collapse>
