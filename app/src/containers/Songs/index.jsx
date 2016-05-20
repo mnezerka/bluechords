@@ -3,9 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actionCreatorsSong from 'actions/Song';
 import * as actionCreatorsSongs from 'actions/Songs';
-//import brace from 'brace';
 import SongsList from 'components/SongsList';
-//import './App.styl';
 
 const mapStateToProps = (state) => ({
     songs: state.songs.data,
@@ -79,19 +77,15 @@ export default class App extends React.Component{
     }
 
     onSongListView(song) {
-        this.context.router.push(`/songs/${song.id}`);
+        this.context.router.push(`${config.path}songs/${song.id}`);
     }
 
     onSongListEdit(song) {
-        this.context.router.push(`/songs/${song.id}/edit`);
+        this.context.router.push(`${config.path}songs/${song.id}/edit`);
     }
 
     onSongListSort(sortField, sortAsc) {
         this.fetchSongs(sortField, sortAsc, this.props.filter);
-    }
-
-    onAction(action) {
-        console.log('action:', action);
     }
 }
 

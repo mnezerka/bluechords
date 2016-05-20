@@ -94,10 +94,10 @@ function handlePost($ep) {
             break;
 
         case 'songs':
+            if (!Auth::validateRequest()) onError403('Invalid authorization');
+
             $api = getApi();
-            if (!isset($ep[1])) {
-                onError400("Missing song id in endpoint path");
-            }
+
             $songData = json_decode(file_get_contents('php://input'));
 
             if (!isset($songData->name) ||
@@ -106,7 +106,15 @@ function handlePost($ep) {
                 onError400('missing name, artist or data attribute');
             } 
 
-            $song = $api->saveSong($ep[1], $songData);
+            $song = null;
+
+            // create new song or update existing
+            if (!isset($ep[1])) {
+                $song = $api->addSong($songData);
+                //onError400("Missing song id in endpoint path");
+            } else {
+                $song = $api->saveSong($ep[1], $songData);
+            }
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($song);
             break;
@@ -126,25 +134,35 @@ function handleGet($ep) {
             break;
 
         case 'songs':
-            $sortField = 'name';
-            $sortAsc = true;
-            if (isset($_GET['ordering']) && strlen($_GET['ordering']) > 0) {
-                $sortField = $_GET['ordering'];
-                if ($sortField[0] == '-') {
-                    $sortAsc = false;
-                    $sortField = substr($sortField, 1);
-                } 
-            };
-
-            $filter = null;
-            if (isset($_GET['filter']) && strlen($_GET['filter']) > 0) {
-                $filter = $_GET['filter'];
-            };
-
             $api = getApi();
-            $songs = $api->getSongs($sortField, $sortAsc, $filter);
-            header('Content-type: application/json; charset=utf-8');
-            echo json_encode($songs);
+
+            // get single song or get all songs
+            if (isset($ep[1]) && strlen($ep[1]) > 0) {
+                $song = $api->getSong($ep[1]);
+                $song = $api->getSong($ep[1]);
+                header('Content-type: application/json; charset=utf-8');
+                echo json_encode($song);
+
+            } else {
+                $sortField = 'name';
+                $sortAsc = true;
+                if (isset($_GET['ordering']) && strlen($_GET['ordering']) > 0) {
+                    $sortField = $_GET['ordering'];
+                    if ($sortField[0] == '-') {
+                        $sortAsc = false;
+                        $sortField = substr($sortField, 1);
+                    } 
+                };
+
+                $filter = null;
+                if (isset($_GET['filter']) && strlen($_GET['filter']) > 0) {
+                    $filter = $_GET['filter'];
+                };
+
+                $songs = $api->getSongs($sortField, $sortAsc, $filter);
+                header('Content-type: application/json; charset=utf-8');
+                echo json_encode($songs);
+            }
             break;
 
         case 'song':

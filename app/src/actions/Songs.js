@@ -37,3 +37,36 @@ export function fetchSongs(options={}) {
         }});
     }
 }
+
+export const SONG_ADD = 'SONG_ADD';
+export const SONG_ADD_SUCCESS = 'SONG_ADD_SUCCESS';
+export const SONG_ADD_FAIL = 'SONG_ADD_FAIL';
+export function addSong(song) {
+    return (dispatch, getState) => {
+        let token = getState().auth.token;
+
+        if (song === null) {
+            return null;
+        }
+
+        song.data = `{title: ${song.name}}`
+
+        let body = JSON.stringify(song);
+
+        dispatch({[CALL_API]: {
+            endpoint: config.api + 'songs',  //eslint-disable-line no-undef
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization-bp': 'BP ' + token
+            },
+            body,
+            types: [
+                SONG_ADD,
+                SONG_ADD_SUCCESS,
+                SONG_ADD_FAIL
+            ]
+        }});
+    }
+}

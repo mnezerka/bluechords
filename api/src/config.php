@@ -4,9 +4,9 @@ $DB_NAME = 'bc';
 $DB_USER = 'bc';
 $DB_PASS = 'bc';
 
-$BLUECHORDS_SECRET = 'pass';
+$BLUECHORDS_SECRET = '!#BlueChordsSecret2376#!';
 
 $BLUECHORDS_USERS = [
-    ['blue', 'blue']
+    ['michaln', 'michaln76']
 ];
 ?>

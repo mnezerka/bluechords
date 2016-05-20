@@ -1,10 +1,10 @@
 import React from 'react';
-import {Modal, Button, Label, FormControl} from 'react-bootstrap';
+import {Modal, Button, ControlLabel, FormControl, FormGroup} from 'react-bootstrap';
 
 const songDefault = {
     id: null,
     name: '',
-    artist: '', 
+    artist: ''
 };
 
 export default class SongInfoModal extends React.Component{
@@ -47,6 +47,14 @@ export default class SongInfoModal extends React.Component{
         }
     }
 
+    getValidationState() {
+        if (this.state.song.name.length === 0) {
+            return 'error';
+        }
+
+        return 'success';
+    }
+
     render() {
         return (
             <Modal show={this.props.show} onHide={this.props.onCancel}>
@@ -54,19 +62,27 @@ export default class SongInfoModal extends React.Component{
                     <Modal.Title>Song Information</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Label>Name</Label>
-                    <FormControl
-                        type="text"
-                        value={this.state.song.name}
-                        onChange={this.onChange.bind(this, 'name')}
-                        placeholder="Enter song name" />
+                    <FormGroup
+                        ref="grpName"
+                        controlId="bc-song-info-modal-form"
+                        validationState={this.getValidationState()} >
 
-                    <Label>Artist</Label>
+                        <ControlLabel>Name</ControlLabel>
+                        <FormControl
+                            type="text"
+                            value={this.state.song.name}
+                            onChange={this.onChange.bind(this, 'name')}
+                            placeholder="Enter song name" />
+                        <FormControl.Feedback />
+                    </FormGroup>
+
+                    <ControlLabel>Artist</ControlLabel>
                     <FormControl
                         type="text"
                         value={this.state.song.artist}
                         onChange={this.onChange.bind(this, 'artist')}
                         placeholder="Enter song artist" />
+
 
                 </Modal.Body>
                 <Modal.Footer>
@@ -83,7 +99,9 @@ export default class SongInfoModal extends React.Component{
     }
 
     onSave() {
-        this.props.onSave(this.state.song);
+        if (this.refs.grpName.props.validationState === 'success') {
+            this.props.onSave(this.state.song);
+        }
     }
 
 }

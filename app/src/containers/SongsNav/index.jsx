@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actionCreatorsSongs from 'actions/Songs';
 import {Navbar, InputGroup, FormGroup, Glyphicon, FormControl} from 'react-bootstrap';
+import BasicNav from 'containers/BasicNav';
 
 const mapStateToProps = (state) => ({
     filter: state.songs.filter,
@@ -37,28 +38,25 @@ export default class SongNav extends React.Component{
 
     render() {
         return (
-            <Navbar fluid>
-                <Navbar.Header>
-                    <Navbar.Brand>Songs</Navbar.Brand>
-                </Navbar.Header>
-                <Navbar.Collapse>
-                    <Navbar.Form pullRight>
-                        <FormGroup>
-                            <InputGroup>
-                                <FormControl
-                                    value={this.state.filter}
-                                    type="text"
-                                    placeholder="Filter"
-                                    onChange={this.onFilterChange.bind(this)} />
-                                <InputGroup.Addon
-                                    onClick={this.onFilter.bind(this)}>
-                                    <Glyphicon glyph="search" />
-                                </InputGroup.Addon>
-                            </InputGroup>
-                        </FormGroup>
-                    </Navbar.Form>
-                </Navbar.Collapse>
-            </Navbar>
+            <BasicNav
+                title="Songs">
+
+                <Navbar.Form pullRight>
+                    <FormGroup>
+                        <InputGroup>
+                            <FormControl
+                                value={this.state.filter}
+                                type="text"
+                                placeholder="Filter"
+                                onChange={this.onFilterChange.bind(this)} />
+                            <InputGroup.Addon
+                                onClick={this.onFilter.bind(this)}>
+                                <Glyphicon glyph="search" />
+                            </InputGroup.Addon>
+                        </InputGroup>
+                    </FormGroup>
+                </Navbar.Form>
+            </BasicNav>
         )
     }
 

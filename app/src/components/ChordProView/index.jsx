@@ -1,5 +1,7 @@
 import React from 'react';
 import {tokenize, parse, NodeChord, NodeChorus, NodeRow, NodeVerse} from 'utils/ChordPro';
+import {ButtonGroup, DropdownButton, MenuItem} from 'react-bootstrap';
+
 import {transpose} from 'utils/ChordProUtils';
 import './ChordProView.styl';
 
@@ -125,15 +127,20 @@ export default class ChordProView extends React.Component{
         transposeStep: 0
     }
 
-    render() {
-        console.log(this.props);
+    constructor(props) {
+        super(props);
+        this.state = {
+            transposeStep: 0
+        }
+    }
 
+    render() {
         let song = null;
         try {
             let tokens = tokenize(this.props.children);
             song = parse(tokens);
-            if (this.props.transposeStep !== 0) {
-                transpose(song, this.props.transposeStep);
+            if (this.state.transposeStep !== 0) {
+                transpose(song, this.state.transposeStep);
             }
         } catch (e) {
             return(<div className="bc-chordpro-view"> {e}</div>);
@@ -155,7 +162,79 @@ export default class ChordProView extends React.Component{
                 {song.title !== null && <h1>{song.title}</h1>}
                 {song.subTitle !== null && <h2>{song.subTitle}</h2>}
                 {items}
+                <ButtonGroup
+                    className="bc-chordpro-view-ctrl-group">
+                    <TransposeCtrl
+                        transposeStep={this.state.transposeStep}
+                        onSelect={this.onTranspose.bind(this)}/>
+                </ButtonGroup>
             </div>
         )
+    }
+
+    onTranspose(transposeStep) {
+        this.setState({transposeStep});
+    }
+
+}
+
+const transposeSteps = [
+    [-6, '-6'],
+    [-5, '-5'],
+    [-4, '-4'],
+    [-3, '-3'],
+    [-2, '-2'],
+    [-1, '-1'],
+    [0, 'Original tuning'],
+    [1, '+1'],
+    [2, '+2'],
+    [3, '+3'],
+    [4, '+4'],
+    [5, '+5'],
+    [6, '+6']
+];
+
+class TransposeCtrl extends React.Component {
+
+    static propTypes = {
+        onSelect: React.PropTypes.func,
+        transposeStep: React.PropTypes.number
+    };
+
+    static defaultProps = {
+        onSelect: () => {},
+        transposeStep: 0 
+    }
+
+    render() {
+
+        // find step label
+        let stepLabel = 'N/A';
+        for (let step of transposeSteps) {
+            if (step[0] === this.props.transposeStep) {
+                stepLabel = step[1];
+            }
+        }
+        
+        return(
+            <DropdownButton
+                pullRight
+                bsSize="small"
+                onSelect={this.props.onSelect} title={stepLabel} id="bc-transpose-ctrl">
+                <MenuItem eventKey={-6}>-6</MenuItem> 
+                <MenuItem eventKey={-5}>-5</MenuItem> 
+                <MenuItem eventKey={-4}>-4</MenuItem> 
+                <MenuItem eventKey={-3}>-3</MenuItem> 
+                <MenuItem eventKey={-2}>-2</MenuItem> 
+                <MenuItem eventKey={-1}>-1</MenuItem> 
+                <MenuItem eventKey={0}>Original tuning</MenuItem> 
+                <MenuItem eventKey={1}>+1</MenuItem> 
+                <MenuItem eventKey={2}>+2</MenuItem> 
+                <MenuItem eventKey={3}>+3</MenuItem> 
+                <MenuItem eventKey={4}>+4</MenuItem> 
+                <MenuItem eventKey={5}>+5</MenuItem> 
+                <MenuItem eventKey={6}>+6</MenuItem> 
+            </DropdownButton>
+        );
     }
 }

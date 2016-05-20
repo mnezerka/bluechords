@@ -1,12 +1,11 @@
 import {createReducer} from 'utils';
-import {SONG_SET_DATA, SONG_SET_INFO, SONG_TRANSPOSE, SONG_FETCH,
+import {SONG_SET_DATA, SONG_SET_INFO, SONG_FETCH,
      SONG_FETCH_SUCCESS, SONG_PUSH, SONG_PUSH_SUCCESS} from 'actions/Song';
 
 const initialState = {
     song: null,
     isFetching: false,
     isModified: false,
-    transposeStep: 0
 };
 
 export default createReducer(initialState, {
@@ -40,19 +39,11 @@ export default createReducer(initialState, {
         });
     },
 
-
-    [SONG_TRANSPOSE]: (state, payload) => {
-        return Object.assign({}, state, {
-            transposeStep: payload
-        });
-    },
-
     [SONG_FETCH]: (state) => {
         return Object.assign({}, state, {
             song: null,
             isFetching: true,
-            isModified: false,
-            transposeStep: 0
+            isModified: false
         });
     },
 

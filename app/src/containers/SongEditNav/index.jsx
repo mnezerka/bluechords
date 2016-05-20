@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import * as actionCreatorsSongs from 'actions/Song';
 import {Navbar, FormGroup, Button} from 'react-bootstrap';
 import SongInfoModal from 'components/SongInfoModal';
+import BasicNav from 'containers/BasicNav';
 
 const mapStateToProps = (state) => ({
     song: state.song.song,
@@ -39,34 +40,31 @@ export default class SongEditNav extends React.Component{
     render() {
         let songName = this.props.song !== null ? this.props.song.name : '';
         return (
-            <Navbar fluid>
-                <Navbar.Header>
-                    <Navbar.Brand>Song {songName}</Navbar.Brand>
-                </Navbar.Header>
-                <Navbar.Collapse>
-                    <Navbar.Form pullRight>
-                        <FormGroup>
-                            <Button
-                                onClick={this.onInfo.bind(this)}>
-                                Song Information...
-                            </Button>
-                            {' '}
-                            <Button
-                                disabled={!this.props.isModified}
-                                onClick={this.onSave.bind(this)}>
-                                Save
-                            </Button>
-                        </FormGroup>
-                    </Navbar.Form>
-                </Navbar.Collapse>
+            <BasicNav
+                title="Songs"
+                subTitle={songName}>
+
+                <Navbar.Form pullRight>
+                    <FormGroup>
+                        <Button
+                            onClick={this.onInfo.bind(this)}>
+                            Song Information...
+                        </Button>
+                        {' '}
+                        <Button
+                            disabled={!this.props.isModified}
+                            onClick={this.onSave.bind(this)}>
+                            Save
+                        </Button>
+                    </FormGroup>
+                </Navbar.Form>
 
                 <SongInfoModal
                     show={this.state.action === ACT_INFO}
                     song={this.props.song}
                     onCancel={this.onCancelAction.bind(this)}
-                    onSave={this.onSaveInfo.bind(this)}
-                    />
-            </Navbar>
+                    onSave={this.onSaveInfo.bind(this)} />
+            </BasicNav>
         )
     }
 

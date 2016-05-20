@@ -1,11 +1,7 @@
 <?php
 
 class Auth {
-    function __construct($db) {
-
-        //$this->_db = $db;
-    }
-
+    
     function userExists($userName) {
         global $BLUECHORDS_USERS;
 
@@ -34,29 +30,29 @@ class Auth {
 
 
     function getToken($userName) {
-        global $BLUEPASS_SECRET;
+        global $BLUECHORDS_SECRET;
 
         $token = array(
             'username' => $userName
         );
         $tokenJson = json_encode($token);
         $tokenBase64 = base64_encode($tokenJson);
-        $result = $tokenBase64 . '.' . md5($BLUEPASS_SECRET . $tokenBase64);
+        $result = $tokenBase64 . '.' . md5($BLUECHORDS_SECRET . $tokenBase64);
         return $result;
     }
 
     function validateToken($token) {
-        global $BLUEPASS_USERS;
-        global $BLUEPASS_SECRET;
+        global $BLUECHORDS_SECRET;
 
         $parts = explode('.', $token);
+
         if (count($parts) != 2) return false; 
-        $sign = md5($BLUEPASS_SECRET . $parts[0]);
+        $sign = md5($BLUECHORDS_SECRET . $parts[0]);
         if ($sign != $parts[1]) return false;
 
-        $data = getTokenData($token);
+        $data = Auth::getTokenData($token);
         if (!property_exists($data, 'username')) return false;
-        if (!in_array($data->username, $BLUEPASS_USERS)) return false;
+        if (!Auth::userExists($data->username)) return false;
 
         return true;
     }
@@ -81,21 +77,21 @@ class Auth {
     }
 
     function getRequestTokenData() {
-        global $BLUEPASS_SECRET;
+        global $BLUECHORDS_SECRET;
 
-        $token = getRequestToken();
+        $token = Auth::getRequestToken();
         if (!is_null($token)) {
-            return getTokenData($token);
+            return Auth::getTokenData($token);
         } 
         return null;
     }
 
     function validateRequest() {
-        global $BLUEPASS_SECRET;
+        global $BLUECHORDS_SECRET;
 
-        $token = getRequestToken();
+        $token = Auth::getRequestToken();
         if (!is_null($token)) {
-            return validateToken($token, $BLUEPASS_SECRET);
+            return Auth::validateToken($token, $BLUECHORDS_SECRET);
         } 
         return false;
     }

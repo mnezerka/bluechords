@@ -16,21 +16,13 @@ export function setInfo(song) {
     });
 }
 
-export const SONG_TRANSPOSE = 'SONG_TRANSPOSE';
-export function transpose(transposeStep) {
-    return({
-        type: SONG_TRANSPOSE,
-        payload: transposeStep
-    });
-}
-
 export const SONG_FETCH = 'SONG_FETCH';
 export const SONG_FETCH_SUCCESS = 'SONG_FETCH_SUCCESS';
 export const SONG_FETCH_FAIL = 'SONG_FETCH_FAIL';
 export function fetchSong(songId) {
     return (dispatch) => {
         dispatch({[CALL_API]: {
-            endpoint: config.api + 'song/' + songId,  //eslint-disable-line no-undef
+            endpoint: config.api + 'songs/' + songId,  //eslint-disable-line no-undef
             method: 'GET',
             types: [
                 SONG_FETCH,
@@ -47,6 +39,8 @@ export const SONG_PUSH_FAIL = 'SONG_PUSH_FAIL';
 export function push() {
     return (dispatch, getState) => {
         let song = getState().song.song;
+        let token = getState().auth.token;
+
         if (song === null) {
             return null;
         }
@@ -58,7 +52,8 @@ export function push() {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization-bp': 'BP ' + token
             },
             body,
             types: [

@@ -57,6 +57,16 @@ class Api {
         return $song; 
     }
 
-
+    function addSong($song) {
+        $result = [];
+        $query = sprintf("INSERT INTO songs (name, artist, data) VALUES ('%s', '%s', '%s')",
+            $this->_db->escapeString($song->name),
+            $this->_db->escapeString($song->artist),
+            $this->_db->escapeString($song->data));
+        $this->_db->query($query);
+    
+        $song = $this->getSong($this->_db->conn->insert_id);
+        return $song; 
+    }
 }
 ?>

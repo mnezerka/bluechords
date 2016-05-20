@@ -57,7 +57,7 @@ export default class LoginPage extends React.Component {
     render() {
         return (
             <div className="saas-login-form">
-                <PageHeader>BluePass</PageHeader>
+                <PageHeader>BlueChords</PageHeader>
                 {this.props.isAuthenticating &&
                     <Alert bsStyle="info">Authenticating...</Alert>}        
 

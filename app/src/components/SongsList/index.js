@@ -206,6 +206,7 @@ export default class SongsList extends React.Component{
                                 return (
                                     <SongRow
                                         key={song.id}
+                                        allowEdit={this.props.allowEdit}
                                         onView={this.props.onView}
                                         onEdit={this.props.onEdit}
                                         onDelete={this.props.onDelete}>

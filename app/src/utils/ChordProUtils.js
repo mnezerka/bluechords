@@ -4,7 +4,7 @@ export function transpose(song, step) {
 
     for (let bodyItem of song.body) {
 
-        if (!(bodyItem instanceof NodeVerse)) {
+        if (!(bodyItem instanceof NodeVerse || !(bodyItem instanceof NodeChord))) {
             continue;
         }
 
