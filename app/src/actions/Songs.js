@@ -67,6 +67,42 @@ export function addSong(song) {
                 SONG_ADD_SUCCESS,
                 SONG_ADD_FAIL
             ]
-        }});
+        }}).then((action) => {
+            if (action.type === SONG_ADD_SUCCESS) {
+                dispatch(fetchSongs());
+            }
+        });
+    }
+}
+
+export const SONG_DELETE = 'SONG_DELETE';
+export const SONG_DELETE_SUCCESS = 'SONG_DELETE_SUCCESS';
+export const SONG_DELETE_FAIL = 'SONG_DELETE_FAIL';
+export function deleteSong(song) {
+    return (dispatch, getState) => {
+        let token = getState().auth.token;
+
+        if (song === null) {
+            return null;
+        }
+
+        dispatch({[CALL_API]: {
+            endpoint: config.api + 'songs/' + song.id,  //eslint-disable-line no-undef
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization-bp': 'BP ' + token
+            },
+            types: [
+                SONG_DELETE,
+                SONG_DELETE_SUCCESS,
+                SONG_DELETE_FAIL
+            ]
+        }}).then((action) => {
+            if (action.type === SONG_DELETE_SUCCESS) {
+                dispatch(fetchSongs());
+            }
+        });
     }
 }

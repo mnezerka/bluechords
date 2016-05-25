@@ -68,5 +68,12 @@ class Api {
         $song = $this->getSong($this->_db->conn->insert_id);
         return $song; 
     }
+
+    function deleteSong($songId) {
+        $result = [];
+        $query = sprintf("DELETE FROM songs WHERE id=%d", (int)$songId);
+        $this->_db->query($query);
+    }
+
 }
 ?>

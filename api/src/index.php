@@ -55,7 +55,7 @@ function onError500($msg) {
 function handleOptions() {
 
     if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");         
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE");         
 
     if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
         header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
@@ -179,6 +179,29 @@ function handleGet($ep) {
     }
 }
 
+function handleDelete($ep) {
+    global $BLUECHORDS_SECRET;
+    global $BLUECHORDS_USERS;
+
+    switch ($ep[0]) {
+
+        case 'songs':
+            if (!Auth::validateRequest()) onError403('Invalid authorization');
+
+            // create new song or update existing
+            if (!isset($ep[1])) {
+                onError400("Missing song id in endpoint path");
+            }
+
+            $api = getApi();
+            $api->deleteSong($ep[1]);
+            
+            break;
+
+        default:
+            onError404("Endpoint $ep[0] does not exist");
+    }
+} 
 
 
 function main() {
@@ -197,6 +220,10 @@ function main() {
 
         case 'GET':
             handleGet($ep);
+            break;
+
+        case 'DELETE':
+            handleDelete($ep);
             break;
 
         default:

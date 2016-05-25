@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import * as actionCreatorsSong from 'actions/Song';
 import * as actionCreatorsSongs from 'actions/Songs';
 import SongsList from 'components/SongsList';
+import ConfirmationModal from 'components/ConfirmationModal';
 
 const mapStateToProps = (state) => ({
     songs: state.songs.data,
@@ -17,6 +18,8 @@ const mapActionsToProps = (dispatch) => ({
     actionsSong: bindActionCreators(actionCreatorsSong, dispatch),
     actionsSongs: bindActionCreators(actionCreatorsSongs, dispatch)
 });
+
+const ACT_DELETE = 'ACT_DELETE';
 
 @connect(mapStateToProps, mapActionsToProps)
 export default class App extends React.Component{
@@ -65,11 +68,24 @@ export default class App extends React.Component{
                     onSort={this.onSongListSort.bind(this)}
                     onView={this.onSongListView.bind(this)}
                     onEdit={this.onSongListEdit.bind(this)}
+                    onDelete={this.onSongListDelete.bind(this)}
                     sortField={this.props.sortField}
                     sortAsc={this.props.sortAsc}
                     />
+
+                    {this.state.action === ACT_DELETE &&
+                    <ConfirmationModal
+                        show
+                        message={'Are you sure you want to delete ' + this.state.actionData.name + '?'}
+                        onCancel={this.onCancelAction.bind(this)}
+                        onOk={this.onSongDeleteConfirmed.bind(this)}
+                    />}
             </div>
         )
+    }
+
+    onCancelAction() {
+        this.setState({action: null, actionData: null});
     }
 
     onSongListRefresh() {
@@ -82,6 +98,15 @@ export default class App extends React.Component{
 
     onSongListEdit(song) {
         this.context.router.push(`${config.path}songs/${song.id}/edit`);
+    }
+
+    onSongListDelete(song) {
+        this.setState({action: ACT_DELETE, actionData: song});
+    }
+
+    onSongDeleteConfirmed(song) {
+        this.props.actionsSongs.deleteSong(this.state.actionData);
+        this.setState({action: null, actionData: null});
     }
 
     onSongListSort(sortField, sortAsc) {
