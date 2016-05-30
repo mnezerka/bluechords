@@ -1,7 +1,8 @@
 language: node_js
 node_js:
     - "4"
+env:
+    - TEST_DIR=app
 before_script:
     - npm install -g gulp
-    - npm install
-script: cd app && gulp test:unit
+script: cd $TEST_DIR && npm install && gulp test:unit
