@@ -19,8 +19,7 @@ export default {
         filename: '[name].js'
     },
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin(/* chunkName= */'libs', /* filename= */'libs.js'),
-        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.CommonsChunkPlugin({name: 'libs', filename: 'libs.js'}),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin(),
         new ExtractTextPlugin('styles.css', {allChunks: true}),
@@ -28,11 +27,20 @@ export default {
             'process.env': {
                 'NODE_ENV': '"production"'
             }
+        }),
+        new webpack.LoaderOptionsPlugin({
+            options: {
+                stylus: {
+                    use: [
+                        poststylus(['autoprefixer'])
+                    ]
+                }
+            }
         })
     ],
     resolve: {
         extensions: ['', '.js', '.jsx', '.styl'],
-        root: [path.resolve(__dirname, '../src')],
+        modules: [path.resolve(__dirname, '../src'), 'node_modules'],
         alias: {
             'react': path.join(__dirname, '..', 'node_modules', 'react'),
             'react-dom': path.join(__dirname, '..', 'node_modules', 'react-dom')
@@ -40,22 +48,18 @@ export default {
     },
     bail: true, //enable errors to fail build
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loaders: ['babel-loader']
+                use: {
+                    loader: 'babel-loader'
+                }
             },
             {
-                test: /\.styl$/,                                                                                                                                                                      
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader!stylus-loader?paths=src/')
+                test: /\.styl$/,
+                loader: ExtractTextPlugin.extract('css-loader!stylus-loader?paths=src/')
             }
         ]
     },
-    stylus: {
-        use: [
-            poststylus(['autoprefixer'])
-        ]
-    }
-
 };

@@ -1,10 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import requireAuth from 'components/AuthenticatedComponent';
 import {Nav, NavItem,  Glyphicon} from 'react-bootstrap';
 import * as actionCreatorsSongs from 'actions/Songs';
 import './App.styl';
 import SongInfoModal from 'components/SongInfoModal';
+import {Route, Switch} from 'react-router-dom';
+import Songs from 'containers/Songs';
 
 const ACT_SONGS = 'songs';
 const ACT_ADD = 'add';
@@ -28,8 +31,6 @@ export default class App extends React.Component{
     static propTypes = {
         actionsSongs: React.PropTypes.object,
         location: React.PropTypes.object.isRequired,
-        main: React.PropTypes.object.isRequired,
-        nav: React.PropTypes.object.isRequired,
         isAuthenticated: React.PropTypes.bool,
     }
 
@@ -44,14 +45,18 @@ export default class App extends React.Component{
         };
     }
 
-    render() {
+    render()
+    {
+        /*
         if (this.props.location.pathname === config.path + 'login') { //eslint-disable-line no-undef
 
             return this.props.main;
         }
+        */
 
         return (
             <div className="bc-container">
+
                 {this.props.nav}
 
                 <div className="bc-content">
@@ -70,8 +75,10 @@ export default class App extends React.Component{
 
                         </Nav>
                     </div>
-   
-                    {this.props.main}
+
+                    <Switch>
+                        <Route exact path="/" component={requireAuth(Songs)}/>
+                    </Switch>
                 </div>
 
                 <SongInfoModal
@@ -92,7 +99,7 @@ export default class App extends React.Component{
         switch (action) {
 
         case ACT_SONGS:
-            this.context.router.push(config.path); //eslint-disable-line no-undef
+            //this.context.router.push(config.path); //eslint-disable-line no-undef
             break;
 
         case ACT_ADD:

@@ -11,7 +11,7 @@ export default {
             './app.js',
             './styles/base.styl'
         ],
-        libs: ['webpack/hot/dev-server', 'react', 'classnames', 'redux']
+        libs: ['react', 'classnames', 'redux']
     },
     output: {
         path: path.resolve(__dirname, '../build'),
@@ -19,34 +19,42 @@ export default {
     },
     devtool: '#eval-source-map',
     plugins: [
-        new webpack.HotModuleReplacementPlugin() 
+        new webpack.LoaderOptionsPlugin({
+            options: {
+                stylus: {
+                    use: [
+                        poststylus(['autoprefixer'])
+                    ]
+                }
+            }
+        })
     ],
     resolve: {
-        extensions: ['', '.js', '.jsx'],
-        root: [path.resolve(__dirname, '../src')],
+        extensions: ['.js', '.jsx'],
+        modules: [path.resolve(__dirname, '../src'), 'node_modules'],
         alias: {
             'react': path.join(__dirname, '..', 'node_modules', 'react'),
             'react-dom': path.join(__dirname, '..', 'node_modules', 'react-dom')
         }
     },
     module: {
-        loaders: [
+        rules: [
             {
-                test: /\.jsx?$/,
+                test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                loaders: ['react-hot', 'babel-loader?cacheDirectory']
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['es2015', 'react', 'stage-0'],
+                        plugins: ['transform-decorators-legacy']
+                    }
+                }
             },
             {
-                test: /\.styl$/,                                                                                                                                                                      
-                loader: 'style-loader!css-loader!stylus-loader?paths=src'                                                                                                         
+                test: /\.styl$/,
+                use: ['style-loader', 'css-loader', 'stylus-loader?paths=src']
             }
         ]
     },
-    stylus: {
-        use: [
-            poststylus(['autoprefixer'])
-        ]
-    }
-
 };
 

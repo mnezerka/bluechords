@@ -25,7 +25,7 @@ export default function requireAuthentication(Component) {
 
         checkAuth (isAuthenticated) {
             if (!isAuthenticated) {
-                this.context.router.push(config.path + 'login');
+                this.context.router.history.push(config.path + 'login');
             }
         }
 

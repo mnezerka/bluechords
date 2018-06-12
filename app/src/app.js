@@ -1,22 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route, IndexRoute, browserHistory} from 'react-router'; 
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import createLogger from 'redux-logger';
+import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
 import {createStore, applyMiddleware} from 'redux';
 import {apiMiddleware} from 'redux-api-middleware';
 import rootReducer from 'reducers';
 import App from 'containers/App';
-import Songs from 'containers/Songs';
-import Song from 'containers/Song';
-import SongEdit from 'containers/SongEdit';
-import SongEditNav from 'containers/SongEditNav';
-import SongsNav from 'containers/SongsNav';
-import SongNav from 'containers/SongNav';
-import Login from 'containers/Login';
+//import Songs from 'containers/Songs';
+//import Song from 'containers/Song';
+//import SongEdit from 'containers/SongEdit';
+//import SongEditNav from 'containers/SongEditNav';
+//import SongsNav from 'containers/SongsNav';
+//import SongNav from 'containers/SongNav';
+//import Login from 'containers/Login';
 import {loginUserSuccess} from 'actions/Auth';
-import requireAuth from 'components/AuthenticatedComponent';
+//import requireAuth from 'components/AuthenticatedComponent';
 
 const logger = createLogger();
 
@@ -27,6 +27,7 @@ const store = createStore(
     applyMiddleware(apiMiddleware, thunk, logger)
 );
 
+/*
 const routes = ( 
     <Route path={config.path} component={App}>     // eslint-disable-line no-undef
         <IndexRoute components={{main: Songs, nav: SongsNav}}/>
@@ -35,6 +36,7 @@ const routes = (
         <Route path="login" components={{main: Login, nav: null}}/>
     </Route>
 );
+*/
 
 // authentication stuff
 let token = localStorage.getItem('token');
@@ -45,6 +47,10 @@ if (token !== null) {
 
 ReactDOM.render((
     <Provider store={store}>
-        <Router history={browserHistory}>{routes}</Router>
+        <Router>
+            <Switch>
+                <Route path="/" component={App}/>
+            </Switch>
+        </Router>
     </Provider>
 ), document.getElementById('app'))

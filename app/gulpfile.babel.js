@@ -8,11 +8,10 @@ import gzip from 'gulp-gzip';
 import replace from 'gulp-replace';
 import del from 'del';
 import runSequence from 'run-sequence';
-import mocha from 'gulp-mocha';
 import webpack from  'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import webpackDevConfig from './config/webpack.dev.js';
-import webpackProductConfig from './config/webpack.product.js';
+// import webpackProductConfig from './config/webpack.product.js';
 import process from 'process';
 
 function onBuild(done) {
@@ -47,7 +46,7 @@ gulp.task('clean', ['clean:product', 'clean:release'], (done) => {
     done();
 });
 
-gulp.task('static', () => {         
+gulp.task('static', () => {
     gulp.src(['assets/**/*']).pipe(gulp.dest('build'));
 });
 
@@ -56,33 +55,37 @@ gulp.task('static:product', ['static'], () => {
         .pipe(grename('index.html'))
         .pipe(gulp.dest('build/'));
 
-    gulp.src('config/config.js.tpl')  
+    gulp.src('config/config.js.tpl')
         .pipe(grename('config.js'))
-        .pipe(gulp.dest('build/')); 
+        .pipe(gulp.dest('build/'));
 });
 
 
-gulp.task('static:dev', ['static'], () => {         
+gulp.task('static:dev', ['static'], () => {
     let hostApi = process.env.HOST_API_PORT_80_TCP_ADDR;
-    gulp.src('src/templates/dev.html')  
+    gulp.src('src/templates/dev.html')
         .pipe(grename('index.html'))
-        .pipe(gulp.dest('build/')); 
+        .pipe(gulp.dest('build/'));
 
-    gulp.src('config/config.js.tpl')  
+    gulp.src('config/config.js.tpl')
         .pipe(grename('config.js'))
         .pipe(replace('{{API_URL}}', `http://${hostApi}/api/`))
-        .pipe(gulp.dest('build/')); 
+        .pipe(gulp.dest('build/'));
 });
 
+/*
 gulp.task('build:product', function(done) {
     var buildWebpackConfig = Object.create(webpackProductConfig);
     var webpackCompiler = webpack(buildWebpackConfig);
     webpackCompiler.run(onBuild(done));
 });
+*/
 
+/*
 gulp.task('product', (callback) => {
     runSequence('clean:product', 'static:product', 'build:product', callback);
 });
+*/
 
 gulp.task('release:compress', () => {
     return gulp.src('build/*')
@@ -100,7 +103,6 @@ gulp.task('watch', ['static:dev'], function() {
     const server = new WebpackDevServer(compiler, {
         // webpack-dev-server options
         contentBase: './build',
-        hot: true,
 
         // webpack-dev-middleware options
         quiet: false,
@@ -117,13 +119,4 @@ gulp.task('watch', ['static:dev'], function() {
         historyApiFallback: true
     });
     server.listen(8081, '0.0.0.0');
-});
-
-
-///////////////////////////////////////////////////////////
-// Unit tests
-gulp.task('test:unit', () => {
-    return gulp.src('src/**/*.test.js', {read: false})
-        //.pipe(mocha({reporter: 'nyan'}));
-        .pipe(mocha());
 });
