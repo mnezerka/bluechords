@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import requireAuth from 'components/AuthenticatedComponent';
-import {Nav, NavItem,  Glyphicon} from 'react-bootstrap';
+import {Navbar, Nav, NavItem,  Glyphicon} from 'react-bootstrap';
 import * as actionCreatorsSongs from 'actions/Songs';
 import './App.styl';
 import SongInfoModal from 'components/SongInfoModal';
@@ -47,17 +47,15 @@ export default class App extends React.Component{
 
     render()
     {
-        /*
-        if (this.props.location.pathname === config.path + 'login') { //eslint-disable-line no-undef
-
-            return this.props.main;
-        }
-        */
-
         return (
             <div className="bc-container">
 
-                {this.props.nav}
+                <Navbar fluid>
+                    <Navbar.Header>
+                        <Navbar.Brand>BlueChords</Navbar.Brand>
+                        <Navbar.Toggle />
+                    </Navbar.Header>
+                </Navbar>
 
                 <div className="bc-content">
 
@@ -69,10 +67,11 @@ export default class App extends React.Component{
                             <NavItem eventKey={ACT_ADD} disabled={!this.props.isAuthenticated}>
                                 <Glyphicon glyph="plus"/>Add Song 
                             </NavItem>
+                            {false &&
                             <NavItem eventKey={ACT_SONGBOOKS} disabled={true}>
                                 <Glyphicon glyph="list-alt"/>Songbooks
                             </NavItem>
-
+                            }
                         </Nav>
                     </div>
 
@@ -91,27 +90,27 @@ export default class App extends React.Component{
         )
     }
 
-    onActionCancel() {
+    onActionCancel()
+    {
         this.setState({action: null});
     }
 
-    onAction(action) {
+    onAction(action)
+    {
         switch (action) {
 
         case ACT_SONGS:
-            //this.context.router.push(config.path); //eslint-disable-line no-undef
+            this.context.router.history.push(config.path); //eslint-disable-line no-undef
             break;
 
         case ACT_ADD:
             this.setState({action});
         }
-
     }
 
-    onSongAdd(song) {
+    onSongAdd(song)
+    {
         this.setState({action: null});
         this.props.actionsSongs.addSong(song);
     }
 }
-
-
