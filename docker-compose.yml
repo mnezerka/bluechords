@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  db:
+    build: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    container_name: bluechords-db
+
+  api:
+    build: api
+    container_name: bluechords-api
+    links:
+      - db:host-db
+    volumes:
+      - ./api/src:/var/www/html/api
+
+  app:
+    build: app
+    container_name: bluechords-app
+    links:
+      - api:host-api
+    volumes:
+      - ./app:/app
+    ports:
+      - "9261:8081"
