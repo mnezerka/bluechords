@@ -6,18 +6,6 @@
     "es6": true
   },
   "parser": "babel-eslint",
-  "ecmaFeatures": {
-    modules: true,
-    "forOf": true,
-    "jsx": true,
-    "spread": true,
-    "restParams": true,
-    "classes": true,
-    "blockBindings": true,
-    "arrowFunctions": true,
-    "superInFunctions": true,
-    "templateStrings": true
-  },
   "plugins": [
     "react",
     "mocha"
@@ -29,7 +17,9 @@
     "React": false,
     "ReactDOM": false,
     "browser": false,
-    "__dirname": false
+    "__dirname": false,
+    "config": false,
+    "google": false
   },
   "rules": {
     "array-bracket-spacing": [1, "never"],
@@ -76,8 +66,6 @@
     "react/no-unknown-property": 1,
     "react/prop-types": 2,
     "react/react-in-jsx-scope": 1,
-    "react/require-extension": 1,
     "react/self-closing-comp": 1,
-    "react/wrap-multilines": 1
   }
 }
