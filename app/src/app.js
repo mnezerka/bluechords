@@ -14,7 +14,7 @@ import App from 'containers/App';
 //import SongEditNav from 'containers/SongEditNav';
 //import SongsNav from 'containers/SongsNav';
 //import SongNav from 'containers/SongNav';
-//import Login from 'containers/Login';
+import Login from 'containers/Login';
 import {loginUserSuccess} from 'actions/Auth';
 //import requireAuth from 'components/AuthenticatedComponent';
 
@@ -44,11 +44,11 @@ if (token !== null) {
     store.dispatch(loginUserSuccess(token));
 }
 
-
 ReactDOM.render((
     <Provider store={store}>
         <Router>
             <Switch>
+                <Route exact path="/login" component={Login}/>
                 <Route path="/" component={App}/>
             </Switch>
         </Router>
