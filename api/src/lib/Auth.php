@@ -1,8 +1,9 @@
 <?php
 
-class Auth {
-    
-    function userExists($userName) {
+class Auth
+{
+    function userExists($userName)
+    {
         global $BLUECHORDS_USERS;
 
         $result = false;
@@ -13,7 +14,7 @@ class Auth {
             }
         }
         return $result;
-    } 
+    }
 
     function userIsValid($userName, $password) {
         global $BLUECHORDS_USERS;
@@ -26,7 +27,7 @@ class Auth {
             }
         }
         return $result;
-    } 
+    }
 
 
     function getToken($userName) {
@@ -72,7 +73,7 @@ class Auth {
                 $token = $matches[1];
                 return $token;
             }
-        } 
+        }
         return null;
     }
 
@@ -82,7 +83,7 @@ class Auth {
         $token = Auth::getRequestToken();
         if (!is_null($token)) {
             return Auth::getTokenData($token);
-        } 
+        }
         return null;
     }
 
@@ -92,7 +93,7 @@ class Auth {
         $token = Auth::getRequestToken();
         if (!is_null($token)) {
             return Auth::validateToken($token, $BLUECHORDS_SECRET);
-        } 
+        }
         return false;
     }
 }

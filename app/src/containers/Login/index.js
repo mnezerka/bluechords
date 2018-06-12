@@ -35,7 +35,8 @@ export default class LoginPage extends React.Component {
         actions: React.PropTypes.object
     }
 
-    constructor(props) {
+    constructor(props)
+    {
         super(props);
         this.state = {
             login: '',
@@ -43,7 +44,8 @@ export default class LoginPage extends React.Component {
         }
     }
 
-    getValidationState() {
+    getValidationState()
+    {
         if (this.state.login.length === 0) {
             return 'warning';
         }
@@ -54,7 +56,8 @@ export default class LoginPage extends React.Component {
         return 'success';
     }
 
-    render() {
+    render()
+    {
         return (
             <div className="saas-login-form">
                 <PageHeader>BlueChords</PageHeader>
@@ -93,7 +96,7 @@ export default class LoginPage extends React.Component {
                         Login</Button>
                 </form>
             </div>
-       );
+        );
     }
 
     onChange(ctrl, value) {
