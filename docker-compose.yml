@@ -12,7 +12,7 @@ services:
     build: api
     container_name: bluechords-api
     links:
-      - db:host-db
+      - db
     volumes:
       - ./api/src:/var/www/html/api
 
@@ -20,7 +20,7 @@ services:
     build: app
     container_name: bluechords-app
     links:
-      - api:host-api
+      - api
     volumes:
       - ./app:/app
     ports:
