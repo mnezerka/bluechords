@@ -2,26 +2,29 @@ version: '3'
 
 services:
 
-  db:
-    build: db
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-    container_name: bluechords-db
-
-  api:
-    build: api
-    container_name: bluechords-api
-    links:
-      - db
-    volumes:
-      - ./api/src:/var/www/html/api
-
-  app:
-    build: app
-    container_name: bluechords-app
-    links:
-      - api
-    volumes:
-      - ./app:/app
+  prisma:
+    image: prismagraphql/prisma:1.25
+    restart: always
     ports:
-      - "9261:8081"
+    - "4466:4466"
+    environment:
+      PRISMA_CONFIG: |
+        port: 4466
+        databases:
+          default:
+            connector: mongo
+            uri: mongodb://prisma:prisma@mongo
+
+  mongo:
+    image: mongo:3.6
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: prisma
+      MONGO_INITDB_ROOT_PASSWORD: prisma
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo:/var/lib/mongo
+
+volumes:
+    mongo:

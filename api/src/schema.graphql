@@ -1,0 +1,30 @@
+type Query {
+    info: String!
+    songs: [Song!]!
+}
+
+
+
+type Mutation {
+    post(name: String!): Song!
+    signup(email: String!, password: String!, name: String!): AuthPayload
+    login(email: String!, password: String!): AuthPayload
+}
+
+type AuthPayload {
+    token: String
+    user: User
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    songs: [Song!]!
+}
+
+type Song {
+    id: ID!
+    name: String!
+    createdBy: User!
+}

@@ -1,0 +1,17 @@
+{
+  "name": "bluechords-api",
+  "version": "1.0.0",
+  "description": "BlueChords API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "michal.nezerka@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "graphql-yoga": "^1.17.2",
+    "jsonwebtoken": "^8.4.0",
+    "prisma-client-lib": "^1.25.7"
+  }
+}

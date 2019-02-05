@@ -1,0 +1,16 @@
+type User {
+    id: ID! @id
+    name: String!
+    email: String!
+    password: String!
+    songs: [Song!]! @relation(link: INLINE)
+    createdAt: DateTime!
+}
+
+type Song {
+    id: ID! @id
+    name: String!
+    createdBy: User!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
