@@ -9,7 +9,7 @@ databaseType: document
 # Specifies language & location for the generated Prisma client
 generate:
   - generator: javascript-client
-    output: ../api/src/generated/prisma-client
+    output: ../server/src/generated/prisma-client
 
 hooks:
   post-deploy:
