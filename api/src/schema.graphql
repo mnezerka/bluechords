@@ -1,13 +1,11 @@
 type Query {
     info: String!
-    songs: [Song!]!
+    songs(filter: String): [Song!]!
 }
-
-
 
 type Mutation {
     post(name: String!): Song!
-    signup(email: String!, password: String!, name: String!): AuthPayload
+    signup(email: String!, password: String!): AuthPayload
     login(email: String!, password: String!): AuthPayload
 }
 
@@ -18,7 +16,6 @@ type AuthPayload {
 
 type User {
     id: ID!
-    name: String!
     email: String!
     songs: [Song!]!
 }
@@ -26,5 +23,6 @@ type User {
 type Song {
     id: ID!
     name: String!
+    content: String
     createdBy: User!
 }

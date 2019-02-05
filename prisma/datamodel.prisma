@@ -1,16 +1,16 @@
 type User {
     id: ID! @id
-    name: String!
-    email: String!
+    email: String! @unique
     password: String!
     songs: [Song!]! @relation(link: INLINE)
-    createdAt: DateTime!
+    createdAt: DateTime! @createdAt
 }
 
 type Song {
     id: ID! @id
     name: String!
+    content: String
     createdBy: User!
-    createdAt: DateTime!
-    updatedAt: DateTime!
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
 }
