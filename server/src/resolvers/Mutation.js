@@ -40,8 +40,10 @@ async function login(parent, args, context, info)
 function post(parent, args, context, info)
 {
     const userId = getUserId(context)
+
     return context.prisma.createSong({
         name: args.name,
+        content: args.content,
         createdBy: { connect: {id: userId}},
     })
 }

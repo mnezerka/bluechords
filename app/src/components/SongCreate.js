@@ -9,6 +9,7 @@ mutation SongMutation($name: String!)
     {
         id
         name
+        content
     }
 }
 `
@@ -17,12 +18,12 @@ class CreateSong extends Component
 {
     state = {
         name: '',
-        url: '',
+        content: '',
     }
 
     render()
     {
-        const {name} = this.state
+        const {name, content} = this.state
 
         return (
             <div>
@@ -34,6 +35,15 @@ class CreateSong extends Component
                         type="text"
                         placeholder="Name for the song"
                     />
+
+                    <textarea
+                        className="mb2"
+                        value={content}
+                        onChange={e => this.setState({content: e.target.value })}
+                        type="textarea"
+                        placeholder="Song lyrics"
+                    />
+
                 </div>
 
                 <Mutation
