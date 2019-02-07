@@ -40,7 +40,55 @@ Phase 3
   possible)
 * Export of Songbook to PDF
 
-## Development ##
+## Get Started ##
+
+**Clone the repository:**
+
+```sh
+git clone https://github.com/mnezerka/bluechords.git
+```
+
+**Start instance (container) of MongoDB and Prisma:**
+```sh
+docker-compose up -d
+```
+
+**Install prisma dependencies and deploy data model**
+
+```sh
+npm install prisma -g
+cd prisma
+prisma deploy
+```
+
+**Start GraphQL server:**
+
+```sh
+cd server
+node src/index.js
+```
+
+**Check GraphQL server web UI:**
+
+Open your browser at [http://localhost:4000](http://localhost:4000), see schema
+(right tab)  and start sending queries:
+
+```graphql
+query {
+     info
+}
+```
+
+**Install web app dependencies and start web app:**
+
+```sh
+cd app
+npm install
+npm start
+```
+
+
+## Implementation ##
 
 See [app](app/README.md) for detailed information related to web *application*.
 
