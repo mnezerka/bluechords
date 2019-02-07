@@ -87,6 +87,9 @@ npm install
 npm start
 ```
 
+**Check web app:**
+Open your browser at [http://localhost:3000](http://localhost:3000). You shoud see
+UI of web application connected to GraphQL server.
 
 ## Implementation ##
 
