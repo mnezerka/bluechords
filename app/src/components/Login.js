@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import {AUTH_TOKEN} from '../const'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 
 const SIGNUP_MUTATION = gql`
 mutation SignupMutation($email: String!, $password: String!)
@@ -34,48 +36,48 @@ class Login extends Component
     {
         const {login, email, password} = this.state
 
-        return (
+        return(
             <div>
-                <h4 className="mv3">{login ? 'Login' : 'Sign Up'}</h4>
+                <h4>{login ? 'Login' : 'Sign Up'}</h4>
 
-                <div className="flex flex-column">
+                <Form>
+                    <Form.Group controlId="formBasicEmail">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control
+                            type="email"
+                            placeholder="Enter email"
+                            value={email}
+                            onChange={e => this.setState({ email: e.target.value })}
+                        />
+                    </Form.Group>
 
-                    <input
-                        value={email}
-                        onChange={e => this.setState({ email: e.target.value })}
-                        type="text"
-                        placeholder="Your email address"
-                    />
+                    <Form.Group controlId="formBasicPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={e => this.setState({ password: e.target.value })}
+                        />
+                    </Form.Group>
 
-                    <input
-                        value={password}
-                        onChange={e => this.setState({ password: e.target.value })}
-                        type="password"
-                        placeholder="Choose a safe password"
-                    />
-
-                </div>
-
-                <div className="flex mt3">
                     <Mutation
                         mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
                         variables={{email, password}}
                         onCompleted={data => this._confirm(data)}
                     >
                         {mutation => (
-                            <div className="pointer mr2 button" onClick={mutation}>
-                                {login ? 'login' : 'create account'}
-                            </div>
+                            <Button onClick={mutation}>
+                                {login ? 'Login' : 'Create Account'}
+                            </Button>
                         )}
                     </Mutation>
 
-                    <div
-                        className="pointer button"
-                        onClick={() => this.setState({ login: !login })}
-                    >
-                        {login ? 'need to create an account?' : 'already have an account?'}
-                    </div>
-                </div>
+
+                    <Button onClick={() => this.setState({ login: !login })}>
+                        {login ? 'Need to create an account?' : 'Already have an account?'}
+                    </Button>
+                </Form>
             </div>
         )
     }

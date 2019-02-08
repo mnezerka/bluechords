@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import Song from './Song'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
+import Table from 'react-bootstrap/Table'
 
 const SONGS_QUERY = gql`
 {
@@ -14,6 +14,15 @@ const SONGS_QUERY = gql`
 
 class Songs extends Component
 {
+    renderSong(song)
+    {
+        return(
+            <tr key={song.id}>
+                <td>{song.name}</td>
+            </tr>
+        )
+    }
+
     render()
     {
         return (
@@ -25,9 +34,11 @@ class Songs extends Component
                     const songsToRender = data.songs
 
                     return (
-                        <div>
-                            {songsToRender.map(song => <Song key={song.id} song={song} />)}
-                        </div>
+                        <Table size="sm" striped={true}>
+                            <tbody>
+                            {songsToRender.map(song => this.renderSong(song))}
+                            </tbody>
+                        </Table>
                     )
                 }}
             </Query>
