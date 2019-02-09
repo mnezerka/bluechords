@@ -2,7 +2,6 @@ import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form'
-//import {Modal, Button, ControlLabel, FormControl, FormGroup} from 'react-bootstrap';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 
@@ -20,7 +19,8 @@ class SongModal extends React.Component
         }
     }
 
-    render() {
+    render()
+    {
         return (
             <Formik
                 initialValues={{name: ''}}
