@@ -3,6 +3,7 @@ import { Query } from 'react-apollo'
 import {AUTH_TOKEN} from '../const'
 import gql from 'graphql-tag'
 import {Link} from 'react-router-dom'
+import ChordProView from '../components/ChordProView'
 
 const SONG_QUERY = gql`
     query Song($id: ID!) {
@@ -41,8 +42,7 @@ class Song extends Component
                             {authToken && (
                                 <Link to={'/song-edit/' + data.song.id}>Edit</Link>
                             )}
-                            <h1>{data.song.name}</h1>
-                            <p>{data.song.content}</p>
+                            <ChordProView>{data.song.content || ''}</ChordProView>
                         </div>
                     )
                 }}
