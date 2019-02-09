@@ -40,6 +40,11 @@ Phase 3
   possible)
 * Export of Songbook to PDF
 
+## Resources ##
+
+[Hot To GraphQL - React + Apollo](https://www.howtographql.com/react-apollo)
+[Apollo GraphQL React](https://www.apollographql.com/docs/react/)
+
 ## Get Started ##
 
 **Clone the repository:**
