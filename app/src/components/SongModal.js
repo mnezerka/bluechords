@@ -72,19 +72,8 @@ class SongModal extends React.Component
 
     onSubmitValid(values)
     {
-        console.log('formik submit', values)
         this.props.onSave(values.name);
     }
-
-    /*
-    onSave()
-    {
-        if (this.refs.grpName.props.validationState === 'success') {
-            this.props.onSave(this.state.song);
-        }
-    }
-    */
-
 }
 
 export default SongModal

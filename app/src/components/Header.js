@@ -6,26 +6,11 @@ import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import SongModal from './SongModal'
-import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
 
 const ACT_SONGS = 'songs';
 const ACT_ADD = 'add';
 const ACT_LOGIN = 'login';
 const ACT_LOGOUT = 'logout';
-
-const SONG_MUTATION = gql`
-mutation SongMutation($name: String!)
-{
-    post(name: $name)
-    {
-        id
-        name
-        content
-    }
-}
-`
 
 class Header extends Component
 {
@@ -64,20 +49,6 @@ class Header extends Component
                     }
 
                 </Navbar>
-
-                {this.state.action === ACT_ADD &&
-                    <Mutation
-                        mutation={SONG_MUTATION}
-                        onCompleted={this.onCancelAction.bind(this)}
-                    >
-                        {(post, {data}) => (
-                            <SongModal
-                                onCancel={this.onCancelAction.bind(this)}
-                                onSave={name => {post({variables: {name}})}}
-                            />
-                         )}
-                    </Mutation>
-                }
             </div>
         )
     }
@@ -87,16 +58,15 @@ class Header extends Component
         this.setState({action: null})
     }
 
-    onAction(action) {
-        console.log(action)
+    onAction(action)
+    {
         switch(action)
         {
         case ACT_SONGS:
             this.props.history.push('/')
             break;
         case ACT_ADD:
-            //this.props.history.push('/create')
-            this.setState({action})
+            this.props.addSong();
             break;
         case ACT_LOGIN:
             this.props.history.push('/login')

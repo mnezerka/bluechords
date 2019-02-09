@@ -8,6 +8,7 @@ const SONGS_QUERY = gql`
     songs {
         id
         name
+        content
     }
 }
 `
