@@ -12,6 +12,13 @@ async function songs(root, args, context)
     return songs
 }
 
+async function song(root, args, context)
+{
+    const {id} = args // destructure input arguments
+    return context.prisma.song({id})
+}
+
 module.exports = {
+    song,
     songs,
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import Table from 'react-bootstrap/Table'
+import { Link } from 'react-router-dom'
 
 const SONGS_QUERY = gql`
 {
@@ -17,9 +18,9 @@ class Songs extends Component
 {
     renderSong(song)
     {
-        return(
+        return (
             <tr key={song.id}>
-                <td>{song.name}</td>
+                <td><Link to={'/song/' + song.id}>{song.name}</Link></td>
             </tr>
         )
     }

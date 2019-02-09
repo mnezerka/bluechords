@@ -1,10 +1,13 @@
 type Query {
     info: String!
+    song(id: ID!): Song
     songs(filter: String): [Song!]!
 }
 
 type Mutation {
-    post(name: String!): Song!
+    addSong(name: String!): Song!
+    updateSong(id: ID!, name: String!, content: String!): Song
+    deleteSong(id: ID!): Song
     signup(email: String!, password: String!): AuthPayload
     login(email: String!, password: String!): AuthPayload
 }

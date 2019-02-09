@@ -37,7 +37,7 @@ async function login(parent, args, context, info)
     }
 }
 
-function post(parent, args, context, info)
+function addSong(parent, args, context, info)
 {
     const userId = getUserId(context)
 
@@ -48,8 +48,27 @@ function post(parent, args, context, info)
     })
 }
 
+function updateSong(parent, {id, name, content}, context)
+{
+    // authentication
+    const userId = getUserId(context)
+
+    return context.prisma.updateSong({data: {name, content}, where: {id}})
+}
+
+function deleteSong(parent, {id}, context)
+{
+    // authentication
+    const userId = getUserId(context)
+
+    return context.prisma.deleteSong({id})
+}
+
+
 module.exports = {
     signup,
     login,
-    post
+    addSong,
+    updateSong,
+    deleteSong,
 }
