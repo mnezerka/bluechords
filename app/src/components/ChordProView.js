@@ -122,7 +122,7 @@ export default class ChordProView extends Component{
         let items = [];
         for (let i = 0; i < song.body.length; i++) {
             let item = song.body[i];
- 
+
             if (item instanceof NodeVerse) {
                 items.push(<Verse key={i}>{item}</Verse>);
             }
@@ -146,7 +146,7 @@ export default class ChordProView extends Component{
     }
 
     onTranspose(transposeStep) {
-        this.setState({transposeStep});
+        this.setState({transposeStep: parseInt(transposeStep)});
     }
 
 }
@@ -171,7 +171,7 @@ class TransposeCtrl extends Component {
 
     static defaultProps = {
         onSelect: () => {},
-        transposeStep: 0 
+        transposeStep: 0
     }
 
     render() {
