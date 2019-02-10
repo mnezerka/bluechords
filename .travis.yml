@@ -1,9 +1,0 @@
-language: node_js
-node_js:
-    - "8"
-before_install: if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
-env:
-    - TEST_DIR=app
-before_script:
-    - npm install -g gulp
-script: cd $TEST_DIR && npm install && gulp test:unit
