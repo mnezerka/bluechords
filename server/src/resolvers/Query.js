@@ -5,11 +5,10 @@ async function songs(root, args, context)
 
     const where = args.filter ? {name_contains : args.filter} : {}
 
-    const songs = await context.prisma.songs({
+    return await context.prisma.songs({
         where,
+        orderBy: args.orderBy
     })
-
-    return songs
 }
 
 async function song(root, args, context)

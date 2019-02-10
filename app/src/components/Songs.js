@@ -5,13 +5,13 @@ import Table from 'react-bootstrap/Table'
 import { Link } from 'react-router-dom'
 
 const SONGS_QUERY = gql`
-{
-    songs {
-        id
-        name
-        content
+    query GetSongs($filter: String) {
+        songs(filter: $filter, orderBy: name_ASC) {
+            id
+            name
+            content
+        }
     }
-}
 `
 
 class Songs extends Component
@@ -28,7 +28,10 @@ class Songs extends Component
     render()
     {
         return (
-            <Query query={SONGS_QUERY}>
+            <Query
+                query={SONGS_QUERY}
+                variables={{filter: this.props.filter || null}}
+            >
                 {({loading, error, data}) => {
                     if (loading) return <div>Fetching</div>
                     if (error) return <div>Error</div>

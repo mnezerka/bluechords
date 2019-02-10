@@ -1,7 +1,7 @@
 type Query {
     info: String!
     song(id: ID!): Song
-    songs(filter: String): [Song!]!
+    songs(filter: String, orderBy: SongOrderByInput): [Song!]!
 }
 
 type Mutation {
@@ -29,3 +29,13 @@ type Song {
     content: String
     createdBy: User!
 }
+
+enum SongOrderByInput {
+  name_ASC
+  name_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+

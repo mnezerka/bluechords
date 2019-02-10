@@ -17,6 +17,7 @@ class Header extends Component
     state = {
         action: null,
         songName: null,
+        filter: ''
     }
 
     render()
@@ -41,12 +42,15 @@ class Header extends Component
                         }
                     </Nav>
 
-                    {false &&
-                    <Form inline>
-                        <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                        <Button>Search</Button>
+                    <Form inline noValidate onSubmit={e => {e.preventDefault()}}>
+                        <FormControl
+                            type="text"
+                            placeholder="Search"
+                            value={this.state.filter}
+                            onChange={(e) => {this.setState({filter: e.target.value})}}
+                            className="mr-sm-2" />
+                        <Button type="submit" onClick={() => this.props.onFilter(this.state.filter)}>Search</Button>
                     </Form>
-                    }
 
                 </Navbar>
             </div>

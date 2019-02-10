@@ -34,7 +34,8 @@ const SONGS_QUERY = gql`
 class App extends Component
 {
     state = {
-        action: null
+        action: null,
+        filter: null,
     }
 
     addSong()
@@ -46,10 +47,13 @@ class App extends Component
     {
         return (
             <div>
-                <Header addSong={this.addSong.bind(this)}/>
+                <Header
+                    addSong={this.addSong.bind(this)}
+                    onFilter={this.onFilter.bind(this)}
+                />
                 <div className="bc-content">
                     <Switch>
-                        <Route exact path="/" component={Songs} />
+                        <Route exact path="/" render={props => (<Songs {...props} filter={this.state.filter}/>)} />
                         <Route exact path="/login" component={Login} />
                         <Route exact path="/song/:id" component={Song} />
                         <Route exact path="/song-edit/:id" component={SongEdit} />
@@ -75,6 +79,11 @@ class App extends Component
                 }
             </div>
         )
+    }
+
+    onFilter(filter)
+    {
+        this.setState({filter})
     }
 
     onCancelAction()
