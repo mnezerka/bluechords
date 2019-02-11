@@ -122,14 +122,14 @@ describe('ChordPro Parser', function() {
         let song = parse(tokens);
         expect(song.body.length).toBe(1);
         let verse = song.body[0];
-        expect(verse).toEqual(jasmine.any(NodeVerse));
+        expect(verse).toBeInstanceOf(NodeVerse);
         expect(verse.children.length).toBe(1);
         let row = verse.children[0];
-        expect(row).toEqual(jasmine.any(NodeRow));
+        expect(row).toBeInstanceOf(NodeRow);
         //let verse = song.body[0];
         expect(row.children.length).toBe(1);
         let chord = row.children[0];
-        expect(chord).toEqual(jasmine.any(NodeChord));
+        expect(chord).toBeInstanceOf(NodeChord);
         expect(chord.chord).toBe('');
         expect(chord.text).toBe('This is verse line');
     });
@@ -140,21 +140,21 @@ describe('ChordPro Parser', function() {
         let song = parse(tokens);
         expect(song.body.length).toBe(1);
         let verse = song.body[0];
-        expect(verse).toEqual(jasmine.any(NodeVerse));
+        expect(verse).toBeInstanceOf(NodeVerse);
         expect(verse.children.length).toBe(1);
         let row = verse.children[0];
-        expect(row).toEqual(jasmine.any(NodeRow));
+        expect(row).toBeInstanceOf(NodeRow);
         expect(row.children.length).toBe(3);
         let chord = row.children[0];
-        expect(chord).toEqual(jasmine.any(NodeChord));
+        expect(chord).toBeInstanceOf(NodeChord);
         expect(chord.chord).toBe('');
         expect(chord.text).toBe('Before');
         chord = row.children[1];
-        expect(chord).toEqual(jasmine.any(NodeChord));
+        expect(chord).toBeInstanceOf(NodeChord);
         expect(chord.chord).toBe('C');
         expect(chord.text).toBe('after ');
         chord = row.children[2];
-        expect(chord).toEqual(jasmine.any(NodeChord));
+        expect(chord).toBeInstanceOf(NodeChord);
         expect(chord.chord).toBe('Am');
         expect(chord.text).toBe('end');
     });
@@ -165,30 +165,30 @@ describe('ChordPro Parser', function() {
         let song = parse(tokens);
         expect(song.body.length).toBe(1);
         let verse = song.body[0];
-        expect(verse).toEqual(jasmine.any(NodeVerse));
+        expect(verse).toBeInstanceOf(NodeVerse);
         expect(verse.children.length).toBe(3);
 
         let row = verse.children[0];
-        expect(row).toEqual(jasmine.any(NodeRow));
+        expect(row).toBeInstanceOf(NodeRow);
         expect(row.children.length).toBe(1);
         let chord = row.children[0];
-        expect(chord).toEqual(jasmine.any(NodeChord));
+        expect(chord).toBeInstanceOf(NodeChord);
         expect(chord.chord).toBe('');
         expect(chord.text).toBe('line1');
 
         row = verse.children[1];
-        expect(row).toEqual(jasmine.any(NodeRow));
+        expect(row).toBeInstanceOf(NodeRow);
         expect(row.children.length).toBe(1);
         chord = row.children[0];
-        expect(chord).toEqual(jasmine.any(NodeChord));
+        expect(chord).toBeInstanceOf(NodeChord);
         expect(chord.chord).toBe('');
         expect(chord.text).toBe('line2');
 
         row = verse.children[2];
-        expect(row).toEqual(jasmine.any(NodeRow));
+        expect(row).toBeInstanceOf(NodeRow);
         expect(row.children.length).toBe(1);
         chord = row.children[0];
-        expect(chord).toEqual(jasmine.any(NodeChord));
+        expect(chord).toBeInstanceOf(NodeChord);
         expect(chord.chord).toBe('');
         expect(chord.text).toBe('line3');
     });
@@ -199,22 +199,22 @@ describe('ChordPro Parser', function() {
         let song = parse(tokens);
         expect(song.body.length).toBe(1);
         let verse = song.body[0];
-        expect(verse).toEqual(jasmine.any(NodeChorus));
+        expect(verse).toBeInstanceOf(NodeChorus);
         expect(verse.children.length).toBe(2);
 
         let row = verse.children[0];
-        expect(row).toEqual(jasmine.any(NodeRow));
+        expect(row).toBeInstanceOf(NodeRow);
         expect(row.children.length).toBe(1);
         let chord = row.children[0];
-        expect(chord).toEqual(jasmine.any(NodeChord));
+        expect(chord).toBeInstanceOf(NodeChord);
         expect(chord.chord).toBe('');
         expect(chord.text).toBe('line1');
 
         row = verse.children[1];
-        expect(row).toEqual(jasmine.any(NodeRow));
+        expect(row).toBeInstanceOf(NodeRow);
         expect(row.children.length).toBe(1);
         chord = row.children[0];
-        expect(chord).toEqual(jasmine.any(NodeChord));
+        expect(chord).toBeInstanceOf(NodeChord);
         expect(chord.chord).toBe('');
         expect(chord.text).toBe('line2');
     });
@@ -240,15 +240,15 @@ describe('ChordPro Parser', function() {
         expect(song.body.length).toBe(3);
 
         let section = song.body[0];
-        expect(section).toEqual(jasmine.any(NodeVerse));
+        expect(section).toBeInstanceOf(NodeVerse);
         expect(section.children.length).toBe(2);
 
         section = song.body[1];
-        expect(section).toEqual(jasmine.any(NodeChorus));
+        expect(section).toBeInstanceOf(NodeChorus);
         expect(section.children.length).toBe(3);
 
         section = song.body[2];
-        expect(section).toEqual(jasmine.any(NodeVerse));
+        expect(section).toBeInstanceOf(NodeVerse);
         expect(section.children.length).toBe(1);
     });
 
