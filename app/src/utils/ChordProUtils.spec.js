@@ -1,4 +1,3 @@
-import {expect} from 'chai';
 import {NodeDoc, NodeVerse, NodeRow, NodeChord} from './ChordPro';
 import {transpose} from './ChordProUtils';
 
@@ -16,11 +15,11 @@ describe('ChordPro Transpose', function() {
 
         transpose(doc, 2);
 
-        expect(chord.chord).is.equal('D E F# G A B C#');
+        expect(chord.chord).toBe('D E F# G A B C#');
 
         transpose(doc, -4);
 
-        expect(chord.chord).is.equal('Bb C D Eb F G A');
+        expect(chord.chord).toBe('Bb C D Eb F G A');
 
     });
 
@@ -37,7 +36,7 @@ describe('ChordPro Transpose', function() {
 
         transpose(doc, 6);
 
-        expect(chord.chord).is.equal('F#m7/5-');
+        expect(chord.chord).toBe('F#m7/5-');
     });
 
 
