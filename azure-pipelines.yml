@@ -6,8 +6,19 @@
 trigger:
 - master
 
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-16.04'
+    mac:
+      imageName: 'macos-10.13'
+    windows:
+      imageName: 'vs2017-win2016'
+  maxParallel: 3
+
+
 pool:
-  vmImage: 'Ubuntu-16.04'
+  vmImage: $(imageName)
 
 steps:
 - task: NodeTool@0
@@ -20,3 +31,6 @@ steps:
     npm install --no-optional
     npm test -- --no-watch
   displayName: 'npm install and test'
+
+- script: npm build
+  displayName: 'npm build'
