@@ -1,3 +1,4 @@
+[![Build Status](https://dev.azure.com/cvakiitho/bluechords/_apis/build/status/bluechords.bluechords?branchName=master)](https://dev.azure.com/cvakiitho/bluechords/_build/latest?definitionId=2&branchName=master)
 # BlueChords
 
 Web application for management of song lyrics stored in
