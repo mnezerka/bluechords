@@ -20,5 +20,6 @@ body {
 }
 
 .bc-chordpro-view-chord {
-    font-style: italic;
+    font-weight: bold;
+    color: #36C;
 }
