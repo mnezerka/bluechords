@@ -9,6 +9,7 @@ type User {
 type Song {
     id: ID! @id
     name: String!
+    artist: String
     content: String
     createdBy: User!
     createdAt: DateTime! @createdAt

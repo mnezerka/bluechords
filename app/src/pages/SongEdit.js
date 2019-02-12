@@ -6,27 +6,27 @@ import {Link} from 'react-router-dom'
 import SongForm from '../components/SongForm'
 import {SONG_QUERY} from '../queries/Songs'
 
-
-const SONG_UPDATE = gql`
-    mutation UpdateSong($id: ID!, $name: String!, $content: String!) {
-        updateSong(id: $id, name: $name, content: $content) {
-            id
-            name
-            content
-        }
-    }
-`
-
 const SONG_ADD = gql`
     mutation SongAdd($name: String!, $content: String!) {
         addSong(name: $name, content: $content) {
             id
             name
+            artist
             content
         }
     }
 `
 
+const SONG_UPDATE = gql`
+    mutation UpdateSong($id: ID!, $name: String!, $artist: String!, $content: String!) {
+        updateSong(id: $id, name: $name, artist: $artist, content: $content) {
+            id
+            name
+            artist
+            content
+        }
+    }
+`
 
 class SongEdit extends Component
 {
@@ -57,6 +57,16 @@ class SongEdit extends Component
                                     const {name, content} = formData;
                                     updateSong({variables: {id: data.song.id, name, content}})
                                 })}
+                                {(updateSong) => (
+
+                                   <SongForm
+                                        song={data.song}
+                                        onSubmit={(formData) => {
+                                            const {name, artist, content} = formData;
+                                            updateSong({variables: {id: data.song.id, name, artist, content}})
+                                        }}
+                                   />
+                                )}
                             </Mutation>
                         </div>
                     )
@@ -87,6 +97,12 @@ class SongEdit extends Component
         // get id passed as part of page url
         const id = this.props.match.params.id
 
+        /*
+        let song = this.props.song;
+        song.content = song.content || '';
+        song.artist = song.artist || '';
+        */
+
         // if we received id => edit existing song
         if (id) {
             return this.renderEdit(id);
@@ -94,7 +110,6 @@ class SongEdit extends Component
 
         // else we are creating new song (without id)
         return this.renderAdd();
-
     }
 }
 

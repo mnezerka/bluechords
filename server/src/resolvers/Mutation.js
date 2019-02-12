@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {APP_SECRET, getUserId} = require('../utils')
-
+d
 async function signup(parent, args, context, info)
 {
     const password = await bcrypt.hash(args.password, 10)
@@ -43,17 +43,18 @@ function addSong(parent, args, context, info)
 
     return context.prisma.createSong({
         name: args.name,
+        artist: args.artist,
         content: args.content,
         createdBy: { connect: {id: userId}},
     })
 }
 
-function updateSong(parent, {id, name, content}, context)
+function updateSong(parent, {id, name, artist, content}, context)
 {
     // authentication
     const userId = getUserId(context)
 
-    return context.prisma.updateSong({data: {name, content}, where: {id}})
+    return context.prisma.updateSong({data: {name, artist, content}, where: {id}})
 }
 
 function deleteSong(parent, {id}, context)

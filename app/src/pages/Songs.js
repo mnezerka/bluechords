@@ -11,7 +11,7 @@ class Songs extends Component
     {
         return (
             <tr key={song.id}>
-                <td><Link to={'/song/' + song.id}>{song.name}</Link></td>
+                <td><Link to={'/song/' + song.id}>{song.name} {song.artist ? '(' + song.artist + ')' : null}</Link></td>
             </tr>
         )
     }
