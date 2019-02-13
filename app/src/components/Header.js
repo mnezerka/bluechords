@@ -70,7 +70,7 @@ class Header extends Component
             this.props.history.push('/')
             break;
         case ACT_ADD:
-            this.props.addSong();
+            this.props.history.push('/song-edit')
             break;
         case ACT_LOGIN:
             this.props.history.push('/login')

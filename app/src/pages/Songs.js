@@ -1,18 +1,9 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
-import gql from 'graphql-tag'
 import Table from 'react-bootstrap/Table'
 import { Link } from 'react-router-dom'
+import {SONGS_QUERY} from '../queries/Songs'
 
-const SONGS_QUERY = gql`
-    query GetSongs($filter: String) {
-        songs(filter: $filter, orderBy: name_ASC) {
-            id
-            name
-            content
-        }
-    }
-`
 
 class Songs extends Component
 {
