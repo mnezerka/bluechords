@@ -21,6 +21,7 @@ class Songs extends Component
         return (
             <Query
                 query={SONGS_QUERY}
+                fetchPolicy="network-only"
                 variables={{filter: this.props.filter || null}}
             >
                 {({loading, error, data}) => {
