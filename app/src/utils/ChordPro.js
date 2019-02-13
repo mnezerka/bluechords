@@ -223,6 +223,10 @@ function directiveHandler(tokens, stack, doc, ttype, tvalue) {
         if (arg.length === 0) { throw new Error(`{${tag}} directive needs an argument`); }
         doc.subTitle = arg;
 
+    } else if (['artist'].indexOf(tag) >= 0) {
+        if (arg.length === 0) { throw new Error(`{${tag}} directive needs an argument`); }
+        doc.artist = arg;
+
     } else if (['c', 'comment'].indexOf(tag) >= 0) {
         if (arg.length === 0) { throw new Error(`{${tag}} directive needs an argument`); }
         let c = new NodeComment();

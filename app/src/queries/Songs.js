@@ -5,6 +5,7 @@ export const SONG_QUERY = gql`
         song(id: $id) {
             id
             name
+            artist
             content
         }
     }
@@ -15,6 +16,7 @@ export const SONGS_QUERY = gql`
         songs(filter: $filter, orderBy: name_ASC) {
             id
             name
+            artist
             content
         }
     }

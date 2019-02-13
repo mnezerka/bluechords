@@ -5,17 +5,7 @@ import gql from 'graphql-tag'
 import {Link} from 'react-router-dom'
 import {Mutation} from 'react-apollo'
 import ChordProView from '../components/ChordProView'
-import {SONGS_QUERY} from '../queries/Songs'
-
-const SONG_QUERY = gql`
-    query Song($id: ID!) {
-        song(id: $id) {
-            id
-            name
-            content
-        }
-    }
-`
+import {SONG_QUERY, SONGS_QUERY} from '../queries/Songs'
 
 const SONG_DELETE = gql`
     mutation DeleteSong($id: ID!) {
@@ -52,12 +42,6 @@ class Song extends Component
                             )}
                             <Mutation
                                 mutation={SONG_DELETE}
-                                update={(cache, {data: {deleteSong}}) => {
-                                    const {songs} = cache.readQuery({query: SONGS_QUERY})
-                                    console.log(songs)
-                                    //cache.writeQuery({query: SONGS_QUERY, data: {songs: songs.concat([addSong])}})
-                                }}
-
                                 onCompleted={() => { this.props.history.push('/')}}
                             >
                                 {(deleteSong) => (

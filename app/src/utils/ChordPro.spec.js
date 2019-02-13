@@ -116,6 +116,13 @@ describe('ChordPro Parser', function() {
         expect(song.subTitle).toBe('This is subtitle');
     });
 
+    it('artist', function () {
+        //let song = parse('');
+        let tokens = tokenize('{artist: This is artist}');
+        let song = parse(tokens);
+        expect(song.artist).toBe('This is artist');
+    });
+
     it('single line verse without chords', function () {
         //let song = parse('');
         let tokens = tokenize('\nThis is verse line\n');

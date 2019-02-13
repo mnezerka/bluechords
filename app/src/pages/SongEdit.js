@@ -7,8 +7,8 @@ import SongForm from '../components/SongForm'
 import {SONG_QUERY} from '../queries/Songs'
 
 const SONG_ADD = gql`
-    mutation SongAdd($name: String!, $content: String!) {
-        addSong(name: $name, content: $content) {
+    mutation SongAdd($name: String!, $artist: String, $content: String!) {
+        addSong(name: $name, artist: $artist, content: $content) {
             id
             name
             artist
@@ -18,7 +18,7 @@ const SONG_ADD = gql`
 `
 
 const SONG_UPDATE = gql`
-    mutation UpdateSong($id: ID!, $name: String!, $artist: String!, $content: String!) {
+    mutation UpdateSong($id: ID!, $name: String!, $artist: String, $content: String!) {
         updateSong(id: $id, name: $name, artist: $artist, content: $content) {
             id
             name
@@ -51,22 +51,12 @@ class SongEdit extends Component
                             <Link to={'/song/' + data.song.id}>View</Link>
                             <Mutation
                                 mutation={SONG_UPDATE}
-                                onCompleted={() => { console.log('completed update')}}
+                                onCompleted={(result) => { this.props.history.push('/song/' + result.updateSong.id)}}
                             >
                                 {(updateSong) => this.renderForm(data.song, (formData) => {
-                                    const {name, content} = formData;
-                                    updateSong({variables: {id: data.song.id, name, content}})
+                                    const {name, artist, content} = formData;
+                                    updateSong({variables: {id: data.song.id, name, artist, content}})
                                 })}
-                                {(updateSong) => (
-
-                                   <SongForm
-                                        song={data.song}
-                                        onSubmit={(formData) => {
-                                            const {name, artist, content} = formData;
-                                            updateSong({variables: {id: data.song.id, name, artist, content}})
-                                        }}
-                                   />
-                                )}
                             </Mutation>
                         </div>
                     )
@@ -81,11 +71,10 @@ class SongEdit extends Component
             <div>
                 <Mutation
                     mutation={SONG_ADD}
-                    onCompleted={() => { console.log('completed add')}}
+                    onCompleted={(data) => {this.props.history.push('/song/' + data.addSong.id)}}
                 >
                    {(addSong, {data}) => this.renderForm({name: '', content: ''}, (formData) => {
-                        console.log('adding new song')
-                        addSong({variables: {name: formData.name, content: formData.content}})
+                        addSong({variables: {name: formData.name, artist: formData.artist, content: formData.content}})
                     })}
                 </Mutation>
             </div>

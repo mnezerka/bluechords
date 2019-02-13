@@ -12,47 +12,58 @@ class SongForm extends Component
 
         let props = args[0]
 
+        let content = props.song.content || '{title: Song Title}\n{artist: Song Artist}\n\nSong lyrics';
+
+        let {song, valid, errorMsg} = this.processContent(content)
+
         this.state = {
-            name: null,
-            artist: null,
-            content: props.song.content || '{t: Song Title}\n{st: Sont Artist}\n\nSong lyrics',
-            contentValid: true,
-            errorMsg: null
+            song,
+            content,
+            valid,
+            errorMsg
         }
     }
 
-    componentWillReceiveProps(nextProps)
+    processContent(content)
     {
-        console.log(nextProps)
+        let result = {content}
+
+        try {
+            result.song = parse(tokenize(content));
+            result.valid = true;
+            result.errorMsg = null;
+        }
+        catch(err) {
+            // ignore errors caused by invalid
+            result.song = {};
+            result.valid = false;
+            result.errorMsg = err.message;
+        }
+
+        return result;
     }
 
     render()
     {
-        //let song = this.props.song;
-        //song.content = song.content || '';
-
-        let songHeader = '';
-        songHeader += 'Name: ' + (this.state.name || '') + ' '
-        songHeader += 'Artist: ' + (this.state.artist || '')
-
-        //console.log(this.state)
+        const song = this.state.song;
 
         return(
             <Form
                 noValidate
                 validated={this.contentValid}
-                onSubmit={console.log}
+                onSubmit={this.onSubmit.bind(this)}
             >
-                <div>{songHeader}</div>
+                <div>Name: {song.title || ''}</div>
+                <div>Artist: {song.artist || ''}</div>
+
                 <Form.Group controlId="songContent">
-                    <Form.Label>Content</Form.Label>
                     <Form.Control
                         as="textarea"
                         name="content"
                         rows="20"
                         value={this.state.content}
                         onChange={this.onContentChange.bind(this)}
-                        isInvalid={!this.state.contentValid}
+                        isInvalid={!this.state.valid}
                     />
                 </Form.Group>
 
@@ -67,27 +78,22 @@ class SongForm extends Component
 
     onContentChange(e)
     {
-        let newState = {content: e.target.value}
-
-        try {
-            let song = parse(tokenize(newState.content));
-
-            if (song.title) {
-                newState.name = song.title
-            }
-
-            if (song.subTitle) {
-                newState.artist = song.subTitle
-            }
-            newState.contentValid = true;
-        }
-        catch(err) {
-            // ignore errors caused by invalid
-            newState.contentValid = false;
-            newState.errorMsg = err.message;
-        }
+        const newState = this.processContent(e.target.value)
 
         this.setState(newState);
+    }
+
+    onSubmit(e)
+    {
+        e.preventDefault();
+        if (this.state.valid && this.props.onSubmit) {
+            const result = {
+                content: this.state.content,
+                name: this.state.song.title,
+                artist: this.state.song.artist
+            }
+            this.props.onSubmit(result);
+        }
     }
 }
 
