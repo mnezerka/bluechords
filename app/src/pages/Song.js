@@ -3,7 +3,9 @@ import { Query } from 'react-apollo'
 import {AUTH_TOKEN} from '../const'
 import gql from 'graphql-tag'
 import {Link} from 'react-router-dom'
+import {Mutation} from 'react-apollo'
 import ChordProView from '../components/ChordProView'
+import {SONGS_QUERY} from '../queries/Songs'
 
 const SONG_QUERY = gql`
     query Song($id: ID!) {
@@ -12,6 +14,12 @@ const SONG_QUERY = gql`
             name
             content
         }
+    }
+`
+
+const SONG_DELETE = gql`
+    mutation DeleteSong($id: ID!) {
+        deleteSong(id: $id) { id }
     }
 `
 
@@ -42,6 +50,24 @@ class Song extends Component
                             {authToken && (
                                 <Link to={'/song-edit/' + data.song.id}>Edit</Link>
                             )}
+                            <Mutation
+                                mutation={SONG_DELETE}
+                                update={(cache, {data: {deleteSong}}) => {
+                                    const {songs} = cache.readQuery({query: SONGS_QUERY})
+                                    console.log(songs)
+                                    //cache.writeQuery({query: SONGS_QUERY, data: {songs: songs.concat([addSong])}})
+                                }}
+
+                                onCompleted={() => { this.props.history.push('/')}}
+                            >
+                                {(deleteSong) => (
+                                    <button onClick={e => {
+                                        e.preventDefault()
+                                        deleteSong({variables: {id}})
+                                    }}>Delete</button>
+                                )}
+                            </Mutation>
+
                             <ChordProView>{data.song.content || ''}</ChordProView>
                         </div>
                     )

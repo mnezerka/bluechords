@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
-import { Query } from 'react-apollo'
+import React, {Component} from 'react'
+import {Query} from 'react-apollo'
 import Table from 'react-bootstrap/Table'
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import {SONGS_QUERY} from '../queries/Songs'
-
 
 class Songs extends Component
 {
