@@ -5,7 +5,7 @@ import gql from 'graphql-tag'
 import {Link} from 'react-router-dom'
 import {Mutation} from 'react-apollo'
 import ChordProView from '../components/ChordProView'
-import {SONG_QUERY, SONGS_QUERY} from '../queries/Songs'
+import {SONG_QUERY} from '../queries/Songs'
 
 const SONG_DELETE = gql`
     mutation DeleteSong($id: ID!) {
