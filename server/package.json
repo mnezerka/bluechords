@@ -1,7 +1,7 @@
 {
-  "name": "bluechords-api",
+  "name": "bluechords-server",
   "version": "1.0.0",
-  "description": "BlueChords API",
+  "description": "BlueChords Server",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

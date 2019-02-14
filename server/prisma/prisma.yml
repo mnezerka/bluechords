@@ -6,10 +6,10 @@ datamodel: datamodel.prisma
 
 databaseType: document
 
-# Specifies language & location for the generated Prisma client
+# specifies language & location for the generated prisma client
 generate:
   - generator: javascript-client
-    output: ../server/src/generated/prisma-client
+    output: ../src/generated/prisma-client
 
 hooks:
   post-deploy:

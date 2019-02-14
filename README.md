@@ -34,21 +34,14 @@ docker-compose up -d
 **Install prisma dependencies and deploy data model**
 
 ```sh
-npm install prisma -g
+docker-compose exec server sh
 cd prisma
 prisma deploy
 ```
 
-**Start GraphQL server:**
-
-```sh
-cd server
-node src/index.js
-```
-
 **Check GraphQL server web UI:**
 
-Open your browser at [http://localhost:4000](http://localhost:4000), see schema
+Open your browser at [http://localhost:4467](http://localhost:4467), see schema
 (right tab)  and start sending queries:
 
 ```graphql

@@ -37,6 +37,8 @@ services:
         - "4467:4000"
     environment:
         PRISMA_URL: "prisma:4466"
+    volumes:
+      - ./server:/usr/src/app
 
 volumes:
     mongo:
