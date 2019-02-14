@@ -1,3 +1,6 @@
+// see following for inspiration:
+// https://www.apollographql.com/docs/apollo-server/essentials/server.html
+
 const {GraphQLServer} = require('graphql-yoga')
 const {prisma} = require('./generated/prisma-client')
 
