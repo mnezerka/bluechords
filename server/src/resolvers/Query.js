@@ -1,3 +1,8 @@
+function info()
+{
+    return 'BlueChords Server';
+}
+
 async function songs(root, args, context)
 {
     // this doesn't work, no idea what could be wrong
@@ -18,6 +23,7 @@ async function song(root, args, context)
 }
 
 module.exports = {
+    info,
     song,
     songs,
 }
