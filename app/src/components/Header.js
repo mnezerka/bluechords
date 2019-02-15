@@ -27,31 +27,36 @@ class Header extends Component
         return (
             <div className="bc-container">
 
-                <Navbar fluid="true">
+                <Navbar expand="lg" bg="dark" variant="dark">
                     <Navbar.Brand>BlueChords</Navbar.Brand>
                     <Navbar.Toggle />
 
-                    <Nav variant="pills" className="mr-auto" activeKey={1} onSelect={this.onAction.bind(this)}>
-                        <Nav.Link eventKey={ACT_SONGS}>Songs</Nav.Link>
-                        <Nav.Link eventKey={ACT_ADD} disabled={!authToken}>Add Song</Nav.Link>
-                        {authToken ? (
-                                <Nav.Link eventKey={ACT_LOGOUT}>Logout</Nav.Link>
-                            ) : (
-                                <Nav.Link eventKey={ACT_LOGIN}>Login</Nav.Link>
-                            )
-                        }
-                    </Nav>
+                    <Navbar.Collapse>
 
-                    <Form inline noValidate onSubmit={e => {e.preventDefault()}}>
-                        <FormControl
-                            type="text"
-                            placeholder="Search"
-                            value={this.state.filter}
-                            onChange={(e) => {this.setState({filter: e.target.value})}}
-                            className="mr-sm-2" />
-                        <Button type="submit" onClick={() => this.props.onFilter(this.state.filter)}>Search</Button>
-                    </Form>
+                        <Nav className="mr-auto" activeKey={1} onSelect={this.onAction.bind(this)}>
+                            <Nav.Link eventKey={ACT_SONGS}>Songs</Nav.Link>
+                            <Nav.Link eventKey={ACT_ADD} disabled={!authToken}>Add Song</Nav.Link>
+                            {authToken ? (
+                                    <Nav.Link eventKey={ACT_LOGOUT}>Logout</Nav.Link>
+                                ) : (
+                                    <Nav.Link eventKey={ACT_LOGIN}>Login</Nav.Link>
+                                )
+                            }
+                        </Nav>
 
+                        <Form inline noValidate onSubmit={e => {e.preventDefault()}}>
+                            <FormControl
+                                type="text"
+                                placeholder="Search"
+                                value={this.state.filter}
+                                onChange={(e) => {this.setState({filter: e.target.value})}}
+                                className="mr-sm-2" />
+                            <Button
+                                variant="outline-info" 
+                                type="submit"
+                                onClick={() => this.props.onFilter(this.state.filter)}>Search</Button>
+                        </Form>
+                    </Navbar.Collapse>
                 </Navbar>
             </div>
         )
