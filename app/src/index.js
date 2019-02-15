@@ -11,9 +11,13 @@ import {BrowserRouter} from 'react-router-dom'
 import {setContext} from 'apollo-link-context'
 import {AUTH_TOKEN} from './const'
 
+// construct url of the server from url of the web app running
+// in browser
+const SERVER_URL = `${window.location.protocol}//${window.location.hostname}:4467`
+
 // url of the grapql server
 const httpLink = createHttpLink({
-    uri: 'http://localhost:4467'
+    uri: SERVER_URL
 })
 
 const authLink = setContext((_, {headers}) => {
