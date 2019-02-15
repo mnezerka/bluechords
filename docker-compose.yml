@@ -13,15 +13,9 @@ services:
     volumes:
       - mongo:/var/lib/mongo
 
-  # prisma port must be mapped to host to be able
-  # to run graphql server in host nodejs environment
-  # it should be disabled in production version where
-  # graphql server will run inside container
   prisma:
     image: prismagraphql/prisma:1.25
     restart: always
-    ports:
-        - "4466:4466"
     environment:
       PRISMA_CONFIG: |
         port: 4466
@@ -37,8 +31,8 @@ services:
         - "4467:4000"
     environment:
         PRISMA_URL: "prisma:4466"
-    volumes:
-      - ./server:/usr/src/app
+    #volumes:
+    #  - ./server:/usr/src/app
 
 volumes:
     mongo:
