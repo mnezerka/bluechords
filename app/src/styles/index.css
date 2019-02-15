@@ -23,3 +23,18 @@ body {
     font-weight: bold;
     color: #36C;
 }
+
+/********************* Login form ************/
+
+.bc-login {
+    padding: 60px 0;
+}
+
+.bc-login form {
+    margin: 0 auto;
+    max-width: 320px;
+}
+
+.bc-login #bc-login-toggle {
+    margin-top: 30px;
+}

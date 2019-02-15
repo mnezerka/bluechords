@@ -36,12 +36,12 @@ class Login extends Component
         const {login} = this.state
 
         return(
-            <div>
-                <h4>{login ? 'Login' : 'Sign Up'}</h4>
+            <div className="bc-login">
 
                 <Mutation
                     mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
                     onCompleted={data => this._confirm(data)}
+                    onError={console.log('error')}
                 >
                     {mutation => (
                             <LoginForm
@@ -115,11 +115,14 @@ class LoginForm extends Component
             >
                 {({values, errors, touched, handleChange, handleSubmit, isSubmitting}) => (
 
+
                     <Form
                         onSubmit={handleSubmit}
                     >
+                        <h4>{this.props.login ? 'Login' : 'Sign Up'}</h4>
+
                         <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Email address <i>{touched.email && errors.email && errors.email}</i></Form.Label>
+                            <Form.Label>Email address: <i>{touched.email && errors.email && errors.email}</i></Form.Label>
                             <Form.Control
                                 type="text"
                                 name="email"
@@ -131,7 +134,7 @@ class LoginForm extends Component
                         </Form.Group>
 
                         <Form.Group controlId="formBasicPassword">
-                            <Form.Label>Password <i>{touched.password && errors.password && errors.password}</i></Form.Label>
+                            <Form.Label>Password: <i>{touched.password && errors.password && errors.password}</i></Form.Label>
                             <Form.Control
                                 type="password"
                                 name="password"
@@ -156,11 +159,14 @@ class LoginForm extends Component
                         </Form.Group>
                         }
 
-                        <Button type="submit">{this.props.login ? 'Login' : 'Create Account'}</Button>
+                        <Button
+                            block type="submit">{this.props.login ? 'Login' : 'Create Account'}</Button>
 
-                        <Button onClick={this.props.onToggleLogin}>
-                            {this.state.login ? 'Need to create an account?' : 'Already have an account?'}
-                        </Button>
+                        <div id="bc-login-toggle">
+                            <Button block variant="outline-secondary" onClick={this.props.onToggleLogin}>
+                                {this.props.login ? 'Need to create an account?': 'Already have an account?'}
+                            </Button>
+                        </div>
                     </Form>
                 )}
             </Formik>
