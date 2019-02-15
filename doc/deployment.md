@@ -64,6 +64,7 @@ docker-compose build
 Start containers (in daemon mode):
 ```sh
 docker-compose -f docker-compose.yml -f docker-compose-prod.yml up -d
+<<<<<<< HEAD
 ```
 
 ### Verify
