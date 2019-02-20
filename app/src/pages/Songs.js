@@ -31,6 +31,11 @@ class Songs extends Component
 
                     return (
                         <Table size="sm" striped={true}>
+                            <thead>
+                                <tr>
+                                    <th>Name (Artist)</th>
+                                </tr>
+                            </thead>
                             <tbody>
                             {songsToRender.map(song => this.renderSong(song))}
                             </tbody>
