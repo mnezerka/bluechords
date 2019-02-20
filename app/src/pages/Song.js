@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Query } from 'react-apollo'
+import {Query} from 'react-apollo'
 import {AUTH_TOKEN} from '../const'
 import gql from 'graphql-tag'
 import {Link} from 'react-router-dom'
@@ -40,17 +40,20 @@ class Song extends Component
                             {authToken && (
                                 <Link to={'/song-edit/' + data.song.id}>Edit</Link>
                             )}
-                            <Mutation
-                                mutation={SONG_DELETE}
-                                onCompleted={() => { this.props.history.push('/')}}
-                            >
-                                {(deleteSong) => (
-                                    <button onClick={e => {
-                                        e.preventDefault()
-                                        deleteSong({variables: {id}})
-                                    }}>Delete</button>
-                                )}
-                            </Mutation>
+
+                            {authToken && (
+                                <Mutation
+                                    mutation={SONG_DELETE}
+                                    onCompleted={() => { this.props.history.push('/')}}
+                                >
+                                    {(deleteSong) => (
+                                        <button onClick={e => {
+                                            e.preventDefault()
+                                            deleteSong({variables: {id}})
+                                        }}>Delete</button>
+                                    )}
+                                </Mutation>
+                            )}
 
                             <ChordProView>{data.song.content || ''}</ChordProView>
                         </div>
