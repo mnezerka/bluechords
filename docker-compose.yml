@@ -8,14 +8,16 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: prisma
       MONGO_INITDB_ROOT_PASSWORD: prisma
-    #ports:
-    #  - "27017:27017"
+    ports:
+      - "27017:27017"
     volumes:
       - mongo:/var/lib/mongo
 
   prisma:
     image: prismagraphql/prisma:1.25
     restart: always
+    ports:
+      - "4466:4466"
     environment:
       PRISMA_CONFIG: |
         port: 4466
@@ -23,16 +25,6 @@ services:
           default:
             connector: mongo
             uri: mongodb://prisma:prisma@mongo
-
-  server:
-    build:
-      context: ./server
-    ports:
-        - "4467:4000"
-    environment:
-        PRISMA_URL: "prisma:4466"
-    #volumes:
-    #  - ./server:/usr/src/app
 
 volumes:
     mongo:
