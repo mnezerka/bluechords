@@ -1,5 +1,7 @@
 type Query {
     info: String!
+    user(id: ID!): User
+    users(filter: String, orderBy: UserOrderByInput): [User!]!
     song(id: ID!): Song
     songs(filter: String, orderBy: SongOrderByInput): [Song!]!
 }
@@ -32,13 +34,18 @@ type Song {
 }
 
 enum SongOrderByInput {
-  name_ASC
-  name_DESC
-  artist_ASC
-  artist_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
+    name_ASC
+    name_DESC
+    artist_ASC
+    artist_DESC
+    createdAt_ASC
+    createdAt_DESC
+    updatedAt_ASC
+    updatedAt_DESC
+}
+
+enum UserOrderByInput {
+  email_ASC
+  email_DESC
 }
 

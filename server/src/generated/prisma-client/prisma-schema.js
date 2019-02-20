@@ -212,6 +212,8 @@ input SongSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: SongWhereInput
   AND: [SongSubscriptionWhereInput!]
+  OR: [SongSubscriptionWhereInput!]
+  NOT: [SongSubscriptionWhereInput!]
 }
 
 input SongUpdateInput {
@@ -237,7 +239,6 @@ input SongUpdateManyWithoutCreatedByInput {
   create: [SongCreateWithoutCreatedByInput!]
   delete: [SongWhereUniqueInput!]
   connect: [SongWhereUniqueInput!]
-  set: [SongWhereUniqueInput!]
   disconnect: [SongWhereUniqueInput!]
   update: [SongUpdateWithWhereUniqueWithoutCreatedByInput!]
   upsert: [SongUpsertWithWhereUniqueWithoutCreatedByInput!]
@@ -324,7 +325,6 @@ input SongWhereInput {
   content_not_starts_with: String
   content_ends_with: String
   content_not_ends_with: String
-  createdBy: UserWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -342,6 +342,8 @@ input SongWhereInput {
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
   AND: [SongWhereInput!]
+  OR: [SongWhereInput!]
+  NOT: [SongWhereInput!]
 }
 
 input SongWhereUniqueInput {
@@ -420,6 +422,8 @@ input UserSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: UserWhereInput
   AND: [UserSubscriptionWhereInput!]
+  OR: [UserSubscriptionWhereInput!]
+  NOT: [UserSubscriptionWhereInput!]
 }
 
 input UserUpdateInput {
@@ -493,7 +497,6 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
-  songs_some: SongWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -503,6 +506,8 @@ input UserWhereInput {
   createdAt_gt: DateTime
   createdAt_gte: DateTime
   AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
 }
 
 input UserWhereUniqueInput {

@@ -3,6 +3,20 @@ function info()
     return 'BlueChords Server';
 }
 
+async function users(root, args, context)
+{
+    return await context.prisma.users({
+        orderBy: args.orderBy
+    })
+}
+
+async function user(root, args, context)
+{
+    const {id} = args // destructure input arguments
+    return context.prisma.user({id})
+}
+
+
 async function songs(root, args, context)
 {
     // this doesn't work, no idea what could be wrong
@@ -24,6 +38,8 @@ async function song(root, args, context)
 
 module.exports = {
     info,
+    user,
+    users,
     song,
     songs,
 }
