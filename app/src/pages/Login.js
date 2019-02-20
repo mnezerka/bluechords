@@ -41,7 +41,7 @@ class Login extends Component
                 <Mutation
                     mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
                     onCompleted={data => this._confirm(data)}
-                    onError={console.log('error')}
+                    onError={console.log('error on login mutation')}
                 >
                     {mutation => (
                             <LoginForm
@@ -108,7 +108,6 @@ class LoginForm extends Component
                 initialValues={{email: '', password: '', sum: ''}}
                 validate={this.validate.bind(this)}
                 onSubmit={(values, {setSubmitting}) => {
-                     console.log('formik submitting');
                      this.props.onSubmit({variables: values})
                      setSubmitting(false);
                 }}

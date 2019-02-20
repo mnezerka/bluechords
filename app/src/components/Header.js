@@ -6,6 +6,9 @@ import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import jwt from 'jsonwebtoken';
+import {USER_QUERY} from '../queries/Users'
+import {Query} from 'react-apollo'
 
 const ACT_SONGS = 'songs';
 const ACT_ADD = 'add';
@@ -20,12 +23,39 @@ class Header extends Component
         filter: ''
     }
 
+    renderUserItem()
+    {
+        const authToken = localStorage.getItem(AUTH_TOKEN)
+
+        let authData = authToken ? jwt.decode(authToken) : {}
+        let {userId} = authData;
+
+        return (
+            <Query query={USER_QUERY} variables={{id: userId}}>
+                {({loading, error, data}) => {
+                    if (loading || !data) return <div>Fetching</div>
+                    if (error) return <div>Error</div>
+
+                    return (
+                        <Nav.Link eventKey={ACT_LOGOUT}>Logout ({data.user.email})</Nav.Link>
+                    )
+                }}
+            </Query>
+        )
+
+    }
+
+
     render()
     {
         const authToken = localStorage.getItem(AUTH_TOKEN)
 
+        // detect if header is rendered for main page (list of songs)
+        const songsPage = this.props.location.pathname === '/';
+
         return (
             <div className="bc-container">
+
 
                 <Navbar expand="lg" bg="dark" variant="dark">
                     <Navbar.Brand>BlueChords</Navbar.Brand>
@@ -33,18 +63,8 @@ class Header extends Component
 
                     <Navbar.Collapse>
 
-                        <Nav className="mr-auto" activeKey={1} onSelect={this.onAction.bind(this)}>
-                            <Nav.Link eventKey={ACT_SONGS}>Songs</Nav.Link>
-                            <Nav.Link eventKey={ACT_ADD} disabled={!authToken}>Add Song</Nav.Link>
-                            {authToken ? (
-                                    <Nav.Link eventKey={ACT_LOGOUT}>Logout</Nav.Link>
-                                ) : (
-                                    <Nav.Link eventKey={ACT_LOGIN}>Login</Nav.Link>
-                                )
-                            }
-                        </Nav>
-
-                        <Form inline noValidate onSubmit={e => {e.preventDefault()}}>
+                        {songsPage &&
+                        <Form className="mr-auto" inline noValidate onSubmit={e => {e.preventDefault()}}>
                             <FormControl
                                 type="text"
                                 placeholder="Search"
@@ -52,10 +72,24 @@ class Header extends Component
                                 onChange={(e) => {this.setState({filter: e.target.value})}}
                                 className="mr-sm-2" />
                             <Button
-                                variant="outline-info" 
+                                variant="secondary"
                                 type="submit"
                                 onClick={() => this.props.onFilter(this.state.filter)}>Search</Button>
                         </Form>
+                        }
+
+                        <Nav activeKey={1} onSelect={this.onAction.bind(this)}>
+                            {songsPage || <Nav.Link eventKey={ACT_SONGS}>Songs</Nav.Link>}
+                            {songsPage && <Nav.Link eventKey={ACT_ADD} disabled={!authToken}>Add Song</Nav.Link>}
+                            {authToken ?
+                                    this.renderUserItem()
+                                : (
+                                    <Nav.Link eventKey={ACT_LOGIN}>Login</Nav.Link>
+                                )
+                            }
+                        </Nav>
+
+
                     </Navbar.Collapse>
                 </Navbar>
             </div>

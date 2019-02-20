@@ -21,18 +21,18 @@ const httpLink = createHttpLink({
 })
 
 const authLink = setContext((_, {headers}) => {
-const token = localStorage.getItem(AUTH_TOKEN)
-return {
-    headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : ''
+    const token = localStorage.getItem(AUTH_TOKEN)
+    return {
+        headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : ''
+        }
     }
-}
 })
 
 const client = new ApolloClient({
-link: authLink.concat(httpLink),
-cache: new InMemoryCache()
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache()
 })
 
 ReactDOM.render(
