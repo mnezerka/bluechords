@@ -1,11 +1,13 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {Query} from 'react-apollo'
 import {AUTH_TOKEN} from '../const'
 import gql from 'graphql-tag'
-import {Link} from 'react-router-dom'
+//import {Link} from 'react-router-dom'
 import {Mutation} from 'react-apollo'
 import ChordProView from '../components/ChordProView'
 import {SONG_QUERY} from '../queries/Songs'
+import Button from 'react-bootstrap/Button'
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 
 const SONG_DELETE = gql`
     mutation DeleteSong($id: ID!) {
@@ -37,9 +39,7 @@ class Song extends Component
 
                     return (
                         <div>
-                            {authToken && (
-                                <Link to={'/song-edit/' + data.song.id}>Edit</Link>
-                            )}
+                            <ChordProView>{data.song.content || ''}</ChordProView>
 
                             {authToken && (
                                 <Mutation
@@ -47,15 +47,21 @@ class Song extends Component
                                     onCompleted={() => { this.props.history.push('/')}}
                                 >
                                     {(deleteSong) => (
-                                        <button onClick={e => {
-                                            e.preventDefault()
-                                            deleteSong({variables: {id}})
-                                        }}>Delete</button>
+                                        <ButtonToolbar>
+                                            <Button
+                                                variant="outline-secondary"
+                                                onClick={e => {this.props.history.push('/song-edit/' + data.song.id)}}>Edit</Button>
+                                            <Button
+                                                variant="outline-secondary"
+                                                onClick={e => {
+                                                    e.preventDefault()
+                                                    deleteSong({variables: {id}})
+                                                }}>Delete</Button>
+                                        </ButtonToolbar>
                                     )}
                                 </Mutation>
                             )}
 
-                            <ChordProView>{data.song.content || ''}</ChordProView>
                         </div>
                     )
                 }}

@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {Query} from 'react-apollo'
 import gql from 'graphql-tag'
 import {Mutation} from 'react-apollo'
-import {Link} from 'react-router-dom'
 import SongForm from '../components/SongForm'
 import {SONG_QUERY} from '../queries/Songs'
 
@@ -31,10 +30,10 @@ const SONG_UPDATE = gql`
 class SongEdit extends Component
 {
 
-    renderForm(song, onSubmit)
+    renderForm(song, onSubmit, onCancel)
     {
         return(
-            <SongForm song={song} onSubmit={onSubmit} />
+            <SongForm song={song} onSubmit={onSubmit} onCancel={this.onCancel.bind(this)} />
         )
     }
 
@@ -47,18 +46,15 @@ class SongEdit extends Component
                     if (error) return <div>Error</div>
 
                     return (
-                        <div>
-                            <Link to={'/song/' + data.song.id}>View</Link>
-                            <Mutation
-                                mutation={SONG_UPDATE}
-                                onCompleted={(result) => { this.props.history.push('/song/' + result.updateSong.id)}}
-                            >
-                                {(updateSong) => this.renderForm(data.song, (formData) => {
-                                    const {name, artist, content} = formData;
-                                    updateSong({variables: {id: data.song.id, name, artist, content}})
-                                })}
-                            </Mutation>
-                        </div>
+                        <Mutation
+                            mutation={SONG_UPDATE}
+                            onCompleted={(result) => { this.props.history.push('/song/' + result.updateSong.id)}}
+                        >
+                            {(updateSong) => this.renderForm(data.song, (formData) => {
+                                const {name, artist, content} = formData;
+                                updateSong({variables: {id: data.song.id, name, artist, content}})
+                            })}
+                        </Mutation>
                     )
                 }}
             </Query>
@@ -86,12 +82,6 @@ class SongEdit extends Component
         // get id passed as part of page url
         const id = this.props.match.params.id
 
-        /*
-        let song = this.props.song;
-        song.content = song.content || '';
-        song.artist = song.artist || '';
-        */
-
         // if we received id => edit existing song
         if (id) {
             return this.renderEdit(id);
@@ -99,6 +89,21 @@ class SongEdit extends Component
 
         // else we are creating new song (without id)
         return this.renderAdd();
+    }
+
+    onCancel()
+    {
+        // get id passed as part of page url
+        const id = this.props.match.params.id
+
+        // if we received id => go back to song view
+        if (id) {
+            this.props.history.push('/song/' + id);
+        } else {
+            // if we dont' have song id (adding new song), we go
+            // back to list of songs
+            this.props.history.push('/');
+        }
     }
 }
 

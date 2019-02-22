@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {Query} from 'react-apollo'
-import Table from 'react-bootstrap/Table'
 import {Link} from 'react-router-dom'
 import {SONGS_QUERY} from '../queries/Songs'
 
@@ -10,7 +9,8 @@ class Songs extends Component
     {
         return (
             <tr key={song.id}>
-                <td><Link to={'/song/' + song.id}>{song.name} {song.artist ? '(' + song.artist + ')' : null}</Link></td>
+                <td><Link to={'/song/' + song.id}>{song.name}</Link></td>
+                <td>{song.artist ? song.artist : ''}</td>
             </tr>
         )
     }
@@ -30,16 +30,17 @@ class Songs extends Component
                     const songsToRender = data.songs
 
                     return (
-                        <Table size="sm" striped={true}>
+                        <table className="bc-songs-table">
                             <thead>
                                 <tr>
-                                    <th>Name (Artist)</th>
+                                    <th>Name</th>
+                                    <th>Artist</th>
                                 </tr>
                             </thead>
                             <tbody>
                             {songsToRender.map(song => this.renderSong(song))}
                             </tbody>
-                        </Table>
+                        </table>
                     )
                 }}
             </Query>

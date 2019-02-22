@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import {tokenize, parse} from '../utils/ChordPro';
 
 
@@ -53,10 +56,28 @@ class SongForm extends Component
                 validated={this.contentValid}
                 onSubmit={this.onSubmit.bind(this)}
             >
-                <div>Name: {song.title || ''}</div>
-                <div>Artist: {song.artist || ''}</div>
+                <Form.Group as={Row} controlId="songName">
+                    <Form.Label column sm="2">Name:</Form.Label>
+                    <Col sm="10">
+                        <Form.Control
+                            plaintext
+                            readOnly
+                            value={song.title || ''} />
+                    </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} controlId="songArtist">
+                    <Form.Label column sm="2">Artist:</Form.Label>
+                    <Col sm="10">
+                        <Form.Control
+                            plaintext
+                            readOnly
+                            value={song.artist || ''} />
+                    </Col>
+                </Form.Group>
 
                 <Form.Group controlId="songContent">
+                    <Form.Label>Song Content:</Form.Label>
                     <Form.Control
                         as="textarea"
                         name="content"
@@ -71,7 +92,12 @@ class SongForm extends Component
                     <div><i>{this.state.errorMsg}</i></div>
                 }
 
-                <Button type="submit">Save</Button>
+                <ButtonToolbar>
+                    <Button variant="outline-secondary" onClick={this.props.onCancel}>Cancel</Button>
+                    <Button variant="outline-primary" type="submit">Save</Button>
+                </ButtonToolbar>
+
+
             </Form>
         )
     }

@@ -54,45 +54,43 @@ class Header extends Component
         const songsPage = this.props.location.pathname === '/';
 
         return (
-            <div className="bc-container">
+            <Navbar expand="lg">
+                <Navbar.Brand>BlueChords</Navbar.Brand>
+
+                {songsPage &&
+                <Form inline noValidate onSubmit={e => {e.preventDefault()}}>
+                    <FormControl
+                        type="text"
+                        placeholder="Search"
+                        value={this.state.filter}
+                        onChange={(e) => {this.setState({filter: e.target.value})}}
+                        className="mr-sm-2" />
+                    <Button
+                        variant="secondary"
+                        type="submit"
+                        onClick={() => this.props.onFilter(this.state.filter)}>Search</Button>
+                </Form>
+                }
 
 
-                <Navbar expand="lg" bg="dark" variant="dark">
-                    <Navbar.Brand>BlueChords</Navbar.Brand>
-                    <Navbar.Toggle />
+                <Navbar.Toggle />
 
-                    <Navbar.Collapse>
+                <Navbar.Collapse>
 
-                        {songsPage &&
-                        <Form className="mr-auto" inline noValidate onSubmit={e => {e.preventDefault()}}>
-                            <FormControl
-                                type="text"
-                                placeholder="Search"
-                                value={this.state.filter}
-                                onChange={(e) => {this.setState({filter: e.target.value})}}
-                                className="mr-sm-2" />
-                            <Button
-                                variant="secondary"
-                                type="submit"
-                                onClick={() => this.props.onFilter(this.state.filter)}>Search</Button>
-                        </Form>
+                    <Nav className="ml-auto" activeKey={1} onSelect={this.onAction.bind(this)}>
+                        {songsPage || <Nav.Link eventKey={ACT_SONGS}>Songs</Nav.Link>}
+                        {songsPage && <Nav.Link eventKey={ACT_ADD} disabled={!authToken}>Add Song</Nav.Link>}
+                        {authToken ?
+                                this.renderUserItem()
+                            : (
+                                <Nav.Link eventKey={ACT_LOGIN}>Login</Nav.Link>
+                            )
                         }
-
-                        <Nav activeKey={1} onSelect={this.onAction.bind(this)}>
-                            {songsPage || <Nav.Link eventKey={ACT_SONGS}>Songs</Nav.Link>}
-                            {songsPage && <Nav.Link eventKey={ACT_ADD} disabled={!authToken}>Add Song</Nav.Link>}
-                            {authToken ?
-                                    this.renderUserItem()
-                                : (
-                                    <Nav.Link eventKey={ACT_LOGIN}>Login</Nav.Link>
-                                )
-                            }
-                        </Nav>
+                    </Nav>
 
 
-                    </Navbar.Collapse>
-                </Navbar>
-            </div>
+                </Navbar.Collapse>
+            </Navbar>
         )
     }
 
