@@ -26,7 +26,7 @@ services:
     image: bluechords_server
     restart: always
     ports:
-      - "4467:4000"
+      - "4467:4467"
     environment:
       - PRISMA_ENDPOINT=http://prisma:4466
 
