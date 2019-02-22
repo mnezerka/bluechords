@@ -2,17 +2,36 @@ body {
   margin: 0;
   padding: 0;
   font-family: Verdana, Geneva, sans-serif;
-  font-size: 11pt;
 }
 
-/*
 .bc-content {
     margin-left: 15px;
     margin-right: 15px;
+    margin-top: 10px;
 }
-*/
 
-/* Chord pro view */
+.navbar {
+    border-bottom: 1px solid #ddd;
+}
+
+.btn-toolbar button {
+    margin-right: 5px;
+}
+
+/********************* ChordPro View ************/
+
+.bc-chordpro-view .dropdown {
+    float: right;
+}
+
+.bc-chordpro-view h1 {
+    font-size: 17pt;
+}
+
+.bc-chordpro-view h2 {
+    font-size: 14pt;
+}
+
 .bc-chordpro-view-verse {
     margin-bottom: 1em;
 }
@@ -25,6 +44,12 @@ body {
 .bc-chordpro-view-chord {
     font-weight: bold;
     color: #36C;
+}
+
+/********************* Songs table ************/
+
+.bc-songs-table {
+    width: 100%;
 }
 
 /********************* Login form ************/

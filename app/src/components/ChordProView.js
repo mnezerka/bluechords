@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {tokenize, parse, NodeChord, NodeChorus, NodeRow, NodeVerse} from '../utils/ChordPro';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import {transpose} from '../utils/ChordProUtils';
@@ -132,15 +131,12 @@ export default class ChordProView extends Component{
         }
         return (
             <div className="bc-chordpro-view">
+                <TransposeCtrl
+                    transposeStep={this.state.transposeStep}
+                    onSelect={this.onTranspose.bind(this)}/>
                 {song.title !== null && <h1>{song.title}</h1>}
                 {song.subTitle !== null && <h2>{song.subTitle}</h2>}
                 {items}
-                <ButtonGroup
-                    className="bc-chordpro-view-ctrl-group">
-                    <TransposeCtrl
-                        transposeStep={this.state.transposeStep}
-                        onSelect={this.onTranspose.bind(this)}/>
-                </ButtonGroup>
             </div>
         )
     }
@@ -186,6 +182,8 @@ class TransposeCtrl extends Component {
 
         return(
             <DropdownButton
+                variant="secondary-outline"
+                alignRight
                 onSelect={this.props.onSelect} title={stepLabel}>
                 <Dropdown.Item eventKey={-6}>-6</Dropdown.Item>
                 <Dropdown.Item eventKey={-5}>-5</Dropdown.Item>
