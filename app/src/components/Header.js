@@ -35,10 +35,14 @@ class Header extends Component
                 {({loading, error, data}) => {
                     if (loading || !data) return <div>Fetching</div>
                     if (error) return <div>Error</div>
-
-                    return (
-                        <Nav.Link eventKey={ACT_LOGOUT}>Logout ({data.user.email})</Nav.Link>
-                    )
+                    if (data.user) {
+                        return (
+                            <Nav.Link eventKey={ACT_LOGOUT}>Logout ({data.user.email})</Nav.Link>
+                        )
+                    } else {
+                        localStorage.removeItem(AUTH_TOKEN)
+                        return null;
+                    }
                 }}
             </Query>
         )
