@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import chordpro from 'js-chordpro';
+import {parse, tokenize} from 'js-chordpro';
 
 
 class SongForm extends Component
@@ -32,7 +32,7 @@ class SongForm extends Component
         let result = {content}
 
         try {
-            result.song = chordpro.parse(chordpro.tokenize(content));
+            result.song = parse(tokenize(content));
             result.valid = true;
             result.errorMsg = null;
         }
