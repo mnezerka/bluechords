@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import {tokenize, parse, NodeChord, NodeChorus, NodeRow, NodeVerse} from '../utils/ChordPro';
+import {tokenize, parse, NodeChord, NodeChorus, NodeRow, NodeVerse} from 'js-chordpro';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
-import {transpose} from '../utils/ChordProUtils';
-//import './ChordProView.styl';
+import {transpose} from 'js-chordpro/dist/utils';
 
 class Text extends Component {
 
