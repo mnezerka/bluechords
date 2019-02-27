@@ -70,7 +70,7 @@ class SongEdit extends Component
                     onCompleted={(data) => {this.props.history.push('/song/' + data.addSong.id)}}
                 >
                    {(addSong, {data}) => this.renderForm({name: '', content: ''}, (formData) => {
-                        addSong({variables: {name: formData.name, artist: formData.artist, content: formData.content}})
+                        addSong({variables: {name: formData.name || '', artist: formData.artist || '', content: formData.content}})
                     })}
                 </Mutation>
             </div>
