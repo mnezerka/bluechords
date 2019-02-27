@@ -1,7 +1,8 @@
-body {
+html, body {
   margin: 0;
   padding: 0;
   font-family: Verdana, Geneva, sans-serif;
+  font-size: 10pt;
 }
 
 .bc-content {
@@ -48,8 +49,9 @@ body {
 
 /********************* Songs table ************/
 
-.bc-songs-table {
-    width: 100%;
+.bc-songs-table td {
+    padding-right: 10px;
+    white-space: nowrap;
 }
 
 /********************* Login form ************/
