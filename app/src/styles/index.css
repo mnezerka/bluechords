@@ -47,11 +47,20 @@ html, body {
     color: #36C;
 }
 
+.bc-chordpro-view-text {
+    padding: 0px;
+    white-space: pre;
+}
+
 /********************* Songs table ************/
 
 .bc-songs-table td {
     padding-right: 10px;
     white-space: nowrap;
+}
+
+.bc-songs-table {
+    margin-bottom: 20px;
 }
 
 /********************* Login form ************/
