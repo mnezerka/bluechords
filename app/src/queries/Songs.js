@@ -12,8 +12,8 @@ export const SONG_QUERY = gql`
 `
 
 export const SONGS_QUERY = gql`
-    query GetSongs($filter: String) {
-        songs(filter: $filter, orderBy: name_ASC) {
+    query GetSongs($first: Int, $skip: Int, $filter: String) {
+        songs(first: $first, skip: $skip, filter: $filter, orderBy: name_ASC) {
             id
             name
             artist
