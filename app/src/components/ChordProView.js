@@ -135,6 +135,7 @@ export default class ChordProView extends Component{
                     onSelect={this.onTranspose.bind(this)}/>
                 {song.title !== null && <h1>{song.title}</h1>}
                 {song.subTitle !== null && <h2>{song.subTitle}</h2>}
+                {song.artist !== null && <h2>{song.artist}</h2>}
                 {items}
             </div>
         )
