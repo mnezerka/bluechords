@@ -52,7 +52,7 @@ class SongEdit extends Component
                         >
                             {(updateSong) => this.renderForm(data.song, (formData) => {
                                 const {name, artist, content} = formData;
-                                updateSong({variables: {id: data.song.id, name, artist, content}})
+                                updateSong({variables: {id: data.song.id, name: name || '', artist: artist || '', content}})
                             })}
                         </Mutation>
                     )

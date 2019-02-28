@@ -17,7 +17,6 @@ export const SONGS_QUERY = gql`
             id
             name
             artist
-            content
         }
     }
 `
