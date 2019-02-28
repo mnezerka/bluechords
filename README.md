@@ -15,7 +15,7 @@ format
 
 ## Resources ##
 
-* [Hot To GraphQL - React + Apollo](https://www.howtographql.com/react-apollo)
+* [Hot To GraphQL - React + Apollo](https://www.howtographql.com/react-apollo/0-introduction/)
 * [Apollo GraphQL](https://www.apollographql.com)
 
 ## Get Started ##
