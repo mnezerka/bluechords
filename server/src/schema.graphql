@@ -3,7 +3,7 @@ type Query {
     user(id: ID!): User
     users(filter: String, orderBy: UserOrderByInput): [User!]!
     song(id: ID!): Song
-    songs(filter: String, orderBy: SongOrderByInput): [Song!]!
+    songs(skip: Int, first: Int, filter: String, orderBy: SongOrderByInput): [Song!]!
 }
 
 type Mutation {
