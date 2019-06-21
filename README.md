@@ -39,12 +39,10 @@ git clone https://github.com/mnezerka/bluechords.git
 docker-compose up -d
 ```
 
-**Install prisma dependencies and deploy data model**
+**Deploy data model**
 
 ```sh
-export PRISMA_ENDPOINT=http://localhost:4466
-cd prisma
-prisma deploy
+docker-compose exec -T mysql mysql -ubc -pbc bc < schema.sql
 ```
 
 **Start GraphQL server locally on your host**
@@ -84,3 +82,5 @@ UI of web application connected to GraphQL server.
 See [app](app/README.md) for detailed information related to web *application*.
 
 See [server](server/README.md) for detailed information related to *server*.
+
+
