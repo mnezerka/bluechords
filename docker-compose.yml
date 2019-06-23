@@ -15,5 +15,14 @@ services:
      volumes:
        - mysql:/var/lib/mysql
 
+#  go-graphql-starter:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - "mysql"
+#
 volumes:
     mysql:
