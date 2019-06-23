@@ -12,12 +12,12 @@ import (
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
     //https://github.com/jmoiron/sqlx
-    "github.com/graphql-go/graphql"
+    //"github.com/graphql-go/graphql"
     "github.com/graphql-go/handler"
     )
 
 type User struct {
-    ID          int     `json:"id"`
+    Id          int     `json:"id"`
     Email       string  `json:"email"`
     Password    string  `json:"password"`
     Created     int     `json:"created"`
@@ -46,7 +46,7 @@ func resolveUsers() []User {
         var user User
 
         // for each row, scan the result into our tag composite object
-        err = results.Scan(&user.ID, &user.Email)
+        err = results.Scan(&user.Id, &user.Email)
 
         users = append(users, user)
 
@@ -58,52 +58,25 @@ func resolveUsers() []User {
     return users
 }
 
-func main() {
-    fmt.Println("Bluechords server")
+func getHandler() (*handler.Handler) {
 
-    userType := graphql.NewObject(graphql.ObjectConfig{
-        Name: "User",
-        Fields: graphql.Fields{
-        "id": &graphql.Field{
-            Type: graphql.Int,
-        },
-        "email": &graphql.Field{
-            Type: graphql.String,
-        },
-        "password": &graphql.Field{
-            Type: graphql.String,
-        },
-        "created": &graphql.Field{
-            Type: graphql.Int,
-        },
-    }})
-
-    rootQuery := graphql.NewObject(graphql.ObjectConfig{
-        Name: "Query",
-        Fields: graphql.Fields{
-            "users": &graphql.Field{
-                Type: graphql.NewList(userType),
-                Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-                    return resolveUsers(), nil
-                },
-            },
-        },
-    })
-
-    schema, _ := graphql.NewSchema(graphql.SchemaConfig{
-        Query:    rootQuery,
-        //Mutation: rootMutation,
-    })
+    schema := getSchema()
 
     h := handler.New(&handler.Config{
-        Schema: &schema,
+        Schema: schema,
         Pretty: true,
         GraphiQL: true,
     })
 
-    http.Handle("/graphql", h)
+    return h
+}
 
-    fmt.Println("Now server is running on port 8080")
+func main() {
+    handler := getHandler()
+
+    http.Handle("/graphql", handler)
+
+    fmt.Println("Bluechords server is running on port 8080")
 
     log.Fatal(http.ListenAndServe(":8080", nil))
 }
