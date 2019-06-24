@@ -1,47 +1,61 @@
 package main
 
 import (
-    "encoding/base64"
+    //"encoding/base64"
     "fmt"
     jwt "github.com/dgrijalva/jwt-go"
     "github.com/op/go-logging"
-    "strconv"
+    //"strconv"
     "time"
 )
 
 type AuthService struct {
-    appName             *string
     signedSecret        *string
     expiredTimeInSecond *time.Duration
     log                 *logging.Logger
 }
 
 func NewAuthService(config *Config, log *logging.Logger) *AuthService {
-    return &AuthService{&config.AppName, &config.JWTSecret, &config.JWTExpireIn, log}
+    return &AuthService{&config.JWTSecret, &config.JWTExpireIn, log}
 }
 
 func (a *AuthService) SignJWT(user *User) (*string, error) {
-    userId := strconv.FormatInt(user.ID, 10)
 
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-        //"id":         base64.StdEncoding.EncodeToString([]byte(userId)),
-        "id":         base64.StdEncoding.EncodeToString([]byte(userId)),
-        "created":    user.Created,
-        "exp":        time.Now().Add(time.Second * *a.expiredTimeInSecond).Unix(),
-        "iss":        *a.appName,
-    })
+    // Declare the expiration time of the token
+    // here, we read this value (in seconds) from configuration
+    expirationTime := time.Now().Add(time.Second * *a.expiredTimeInSecond)
+
+    // Create the JWT claims, which includes the user id and expiry time
+    claims := &Claims{
+        Id: user.ID,
+        StandardClaims: jwt.StandardClaims{
+            // In JWT, the expiry time is expressed as unix milliseconds
+            ExpiresAt: expirationTime.Unix(),
+        },
+    }
+
+    // Declare the token with the algorithm used for signing, and the claims
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
     tokenString, err := token.SignedString([]byte(*a.signedSecret))
+
     return &tokenString, err
 }
 
-func (a *AuthService) ValidateJWT(tokenString *string) (*jwt.Token, error) {
-    token, err := jwt.Parse(*tokenString, func(token *jwt.Token) (interface{}, error) {
+// validate token provided as string, return parsed token
+func (a *AuthService) ValidateJWT(tokenString *string) (*jwt.Token, *Claims, error) {
+
+    // Initialize a new instance of `Claims`
+    claims := &Claims{}
+
+    //token, err := jwt.Parse(*tokenString, func(token *jwt.Token) (interface{}, error) {
+    token, err := jwt.ParseWithClaims(*tokenString, claims, func(token *jwt.Token) (interface{}, error) {
         if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
             return nil, fmt.Errorf("    unexpected signing method: %v", token.Header["alg"])
         }
 
         return []byte(*a.signedSecret), nil
     })
-    return token, err
+
+    return token, claims, err
 }

@@ -8,29 +8,39 @@ import (
 
 func (r *Resolver) User(ctx context.Context, args struct {Email string}) (*userResolver, error) {
 
-    userId := ctx.Value("user_id").(*string)
+    userId := ctx.Value("user_id").(*int64)
+
     user, err := ctx.Value("userService").(*UserService).FindByEmail(args.Email)
 
     if err != nil {
         ctx.Value("log").(*logging.Logger).Errorf("Graphql error : %v", err)
         return nil, err
     }
-    ctx.Value("log").(*logging.Logger).Debugf("Retrieved user by user_id[%s] : %v", *userId, *user)
+    ctx.Value("log").(*logging.Logger).Debugf("Retrieved user by user_id[%d] : %v", *userId, *user)
     return &userResolver{user}, nil
 }
 
 func (r *Resolver) Users(ctx context.Context) ([]*userResolver, error) {
 
+    ctx.Value("log").(*logging.Logger).Debugf("here")
+
     if isAuthorized := ctx.Value("is_authorized").(bool); !isAuthorized {
         return nil, errors.New(CredentialsError)
     }
 
-    userId := ctx.Value("user_id").(*string)
+    ctx.Value("log").(*logging.Logger).Debugf("here2")
+
+    userId := ctx.Value("user_id").(*int64)
+
+    ctx.Value("log").(*logging.Logger).Debugf("here3")
 
     users, err := ctx.Value("userService").(*UserService).List()
     //count, err := ctx.Value("userService").(*UserService).Count()
 
-    ctx.Value("log").(*logging.Logger).Debugf("Retrieved users by user_id[%s] :", *userId)
+    ctx.Value("log").(*logging.Logger).Debugf("here4")
+
+
+    ctx.Value("log").(*logging.Logger).Debugf("Retrieved users by user_id[%d] :", *userId)
 
     config := ctx.Value("config").(*Config)
 
@@ -40,7 +50,7 @@ func (r *Resolver) Users(ctx context.Context) ([]*userResolver, error) {
         }
     }
 
-    ctx.Value("log").(*logging.Logger).Debugf("Retrieved total users count by user_id[%s] : %v", *userId, len(users))
+    ctx.Value("log").(*logging.Logger).Debugf("Retrieved total users count by user_id[%d] : %v", *userId, len(users))
 
     if err != nil {
         ctx.Value("log").(*logging.Logger).Errorf("Graphql error : %v", err)

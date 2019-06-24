@@ -1,4 +1,3 @@
-app-name = "server"
 version = 1.0
 
 [db]

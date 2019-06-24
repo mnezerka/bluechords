@@ -17,6 +17,6 @@ func NewLogger(config *Config) *logging.Logger {
     }
 
     logging.SetBackend(backendLeveled)
-    logger := logging.MustGetLogger(config.AppName)
+    logger := logging.MustGetLogger("server")
     return logger
 }

@@ -1,32 +1,66 @@
 package main
 
 import (
-    gcontext "github.com/OscarYuen/go-graphql-starter/context"
-    "github.com/OscarYuen/go-graphql-starter/schema"
-    "github.com/OscarYuen/go-graphql-starter/service"
     "github.com/graph-gophers/graphql-go"
     "github.com/graph-gophers/graphql-go/gqltesting"
     "golang.org/x/net/context"
-    "log"
     "testing"
+    //"fmt"
 )
 
 var (
-    rootSchema = graphql.MustParseSchema(schema.GetRootSchema(), &Resolver{})
-    ctx        context.Context
+    rootSchema = graphql.MustParseSchema(GetRootSchema(), &Resolver{})
+    ctx context.Context
+    userId int64 = 999
 )
 
 func init() {
-    config := gcontext.LoadConfig("../")
-    db, err := gcontext.OpenDB(config)
+    config := makeConfigFromFile("../")
+
+    log := NewLogger(config)
+
+    db, err := openDb(log, config)
     if err != nil {
         log.Fatalf("Unable to connect to db: %s \n", err)
     }
-    log := service.NewLogger(config)
-    roleService := service.NewRoleService(db, log)
-    userService := service.NewUserService(db, roleService, log)
-    ctx = context.WithValue(context.Background(), "userService", userService)
+
+    userService := NewUserService(db, log)
+    authService := NewAuthService(config, log)
+
+
+    ctx = context.Background()
+    ctx = context.WithValue(ctx, "userService", userService)
+    ctx = context.WithValue(ctx, "config", config)
+    ctx = context.WithValue(ctx, "log", log)
+    ctx = context.WithValue(ctx, "authService", authService)
+    ctx = context.WithValue(ctx, "is_authorized", true)
+    ctx = context.WithValue(ctx, "user_id", &userId)
+
+    //ctx = context.WithValue(context.Background(), "userService", userService)
 }
+
+/*
+func TestBasic(t *testing.T) {
+
+    test := gqltesting.Test{
+        Query: `
+            {
+                users {
+                    id
+                }
+            }
+        `,
+        Schema: rootSchema,
+        Context: ctx,
+    }
+
+    result := rootSchema.Exec(test.Context, test.Query, test.OperationName, test.Variables)
+
+    fmt.Printf("result %v", result)
+
+}
+*/
+
 
 func TestBasic(t *testing.T) {
     gqltesting.RunTests(t, []*gqltesting.Test{
@@ -35,7 +69,7 @@ func TestBasic(t *testing.T) {
             Schema:  rootSchema,
             Query: `
                 {
-                    user(email:"test@1.com") {
+                    user(email:"test@test.com") {
                         id
                         email
                         password
@@ -45,12 +79,29 @@ func TestBasic(t *testing.T) {
             ExpectedResult: `
                 {
                     "user": {
-                      "id": "1",
-                      "email": "test@1.com",
+                      "id": "3",
+                      "email": "test@test.com",
                       "password": "********"
                     }
                 }
             `,
         },
+        /*
+        {
+            Context: ctx,
+            Schema:  rootSchema,
+            Query: "{ users { id } }",
+            ExpectedResult: `
+                {
+                    "user": {
+                      "id": "3",
+                      "email": "test@test.com",
+                      "password": "********"
+                    }
+                }
+            `,
+        },
+        */
+
     })
 }

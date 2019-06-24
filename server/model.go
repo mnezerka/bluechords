@@ -5,6 +5,7 @@ import (
     "log"
 )
 
+// Struct used to read the username and password from the request body
 type UserCredentials struct {
     Email    string `json:"email"`
     Password string `json:"password"`

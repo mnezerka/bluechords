@@ -9,8 +9,6 @@ import (
     "github.com/op/go-logging"
     "golang.org/x/net/context"
     "io/ioutil"
-    "log"
-    "net"
     "net/http"
     "strings"
     jwt "github.com/dgrijalva/jwt-go"
@@ -35,6 +33,7 @@ func (h *GraphQL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     ctx := r.Context()
 
     response := h.Schema.Exec(ctx, params.Query, params.OperationName, params.Variables)
+
     responseJSON, err := json.Marshal(response)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -49,103 +48,24 @@ func Authenticate(h http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         var (
             isAuthorized = false
-            userId       string
         )
 
         ctx := r.Context()
 
-        ctx.Value("log").(*logging.Logger).Debugf("Inside Authenticate")
-
         // check if user is authorized
-        token, err := validateBearerAuthHeader(ctx, r)
+        token, claims, err := validateBearerAuthHeader(ctx, r)
         if err == nil {
             isAuthorized = true
             ctx.Value("log").(*logging.Logger).Debugf("User is authorized")
 
-            if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-                ctx.Value("log").(*logging.Logger).Debugf("Inside claim %s", claims)
-                userIdByte, _ := base64.StdEncoding.DecodeString(claims["id"].(string))
-                ctx.Value("log").(*logging.Logger).Debugf("Inside claim - have user id byte")
-                userId = string(userIdByte[:])
-                ctx.Value("log").(*logging.Logger).Debugf("Inside claim - have user id")
-            } else {
-                log.Println(err)
+            if token.Valid {
+                ctx.Value("log").(*logging.Logger).Debugf("Token is valid, userid: %d", claims.Id)
             }
         }
 
-        //ctx.Value("log").(*logging.Logger).Debugf("User is authorized")
-
-        ip, _, err := net.SplitHostPort(r.RemoteAddr)
-        if err != nil {
-            log.Println(w, "Requester ip: %q is not IP:port", r.RemoteAddr)
-        }
-
-        ctx = context.WithValue(ctx, "user_id", &userId)
-        ctx = context.WithValue(ctx, "requester_ip", &ip)
+        ctx = context.WithValue(ctx, "user_id", &claims.Id)
         ctx = context.WithValue(ctx, "is_authorized", isAuthorized)
         h.ServeHTTP(w, r.WithContext(ctx))
-    })
-}
-
-func Login() http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        w.Header().Set("Content-Type", "application/json")
-        ctx := r.Context()
-        loginResponse := &LoginResponse{}
-
-        if r.Method != http.MethodPost {
-            response := &Response{
-                Code:  http.StatusMethodNotAllowed,
-                Error: PostMethodSupported,
-            }
-            loginResponse.Response = response
-            writeResponse(w, loginResponse, loginResponse.Code)
-            return
-        }
-
-        // get user credentials from authorization header (basic auth scheme)
-        userCredentials, err := validateBasicAuthHeader(r)
-        if err != nil {
-            response := &Response{
-                Code:  http.StatusBadRequest,
-                Error: err.Error(),
-            }
-            loginResponse.Response = response
-            writeResponse(w, loginResponse, loginResponse.Code)
-            return
-        }
-
-        // try to get user
-        user, err := ctx.Value("userService").(*UserService).ComparePassword(userCredentials)
-        if err != nil {
-            response := &Response{
-                Code:  http.StatusUnauthorized,
-                Error: err.Error(),
-            }
-            loginResponse.Response = response
-            writeResponse(w, loginResponse, loginResponse.Code)
-            return
-        }
-
-        tokenString, err := ctx.Value("authService").(*AuthService).SignJWT(user)
-        if err != nil {
-            response := &Response{
-                Code:  http.StatusBadRequest,
-                Error: TokenError,
-            }
-            loginResponse.Response = response
-            writeResponse(w, loginResponse, loginResponse.Code)
-            return
-        }
-
-        ctx.Value("log").(*logging.Logger).Debugf("Token string: %s", *tokenString)
-
-        response := &Response{
-            Code: http.StatusOK,
-        }
-        loginResponse.Response = response
-        loginResponse.AccessToken = *tokenString
-        writeResponse(w, loginResponse, loginResponse.Code)
     })
 }
 
@@ -175,26 +95,31 @@ func validateBasicAuthHeader(r *http.Request) (*UserCredentials, error) {
     return &userCredentials, nil
 }
 
-func validateBearerAuthHeader(ctx context.Context, r *http.Request) (*jwt.Token, error) {
+func validateBearerAuthHeader(ctx context.Context, r *http.Request) (*jwt.Token, *Claims, error) {
     var tokenString string
+
+    // first, try to get auth token from query parameter "at"
     keys, ok := r.URL.Query()["at"]
     if !ok || len(keys) < 1 {
+
+        // second, try to get auth token from authorization header
         auth := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
         if len(auth) != 2 || auth[0] != "Bearer" {
-            return nil, errors.New(CredentialsError)
+            return nil, nil, errors.New(CredentialsError)
         }
         tokenString = auth[1]
     } else {
         tokenString = keys[0]
     }
-    token, err := ctx.Value("authService").(*AuthService).ValidateJWT(&tokenString)
-    return token, err
-}
 
+    // we have token, let's validate it
+    token, claims, err := ctx.Value("authService").(*AuthService).ValidateJWT(&tokenString)
+
+    return token, claims, err
+}
 
 func AddContext(ctx context.Context, h http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        ctx.Value("log").(*logging.Logger).Debugf("Inside add context")
         h.ServeHTTP(w, r.WithContext(ctx))
     })
 }

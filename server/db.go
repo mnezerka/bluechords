@@ -3,13 +3,13 @@ package main
 import (
     "fmt"
     "github.com/jmoiron/sqlx"
+    "github.com/op/go-logging"
     _ "github.com/go-sql-driver/mysql"
-    "log"
     "time"
 )
 
-func openDb(config *Config) (*sqlx.DB, error) {
-    log.Println("Database is connecting... ")
+func openDb(log *logging.Logger, config *Config) (*sqlx.DB, error) {
+    log.Info("Database is connecting... ")
 
     db, err := sqlx.Open("mysql", fmt.Sprintf("%s:%s@(%s:%s)/%s",
         config.DBUser,
@@ -24,10 +24,10 @@ func openDb(config *Config) (*sqlx.DB, error) {
     }
 
     if err = db.Ping(); err != nil {
-        log.Println("Retry database connection in 5 seconds... ")
+        log.Info("Retry database connection in 5 seconds... ")
         time.Sleep(time.Duration(5) * time.Second)
-        return openDb(config)
+        return openDb(log, config)
     }
-    log.Println("Database is connected ")
+    log.Info("Database is connected ")
     return db, nil
 }

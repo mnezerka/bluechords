@@ -20,13 +20,13 @@ func (u *UserService) FindByEmail(email string) (*User, error) {
     user := &User{}
 
     userSQL := `SELECT * FROM users WHERE email = ?`
-    u.log.Infof("query: %s, email: %s", userSQL, email)
+    u.log.Debugf("query: %s, email: %s", userSQL, email)
 
     udb := u.db.Unsafe()
     row := udb.QueryRowx(userSQL, email)
     err := row.StructScan(user)
     if err == sql.ErrNoRows {
-        return user, nil
+        return nil, errors.New("User not found")
     }
     if err != nil {
         u.log.Errorf("Error in retrieving user : %v", err)

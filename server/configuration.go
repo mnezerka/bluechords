@@ -7,8 +7,6 @@ import (
 )
 
 type Config struct {
-    AppName     string
-
     DBHost      string
     DBPort      string
     DBUser      string
@@ -32,8 +30,6 @@ func makeConfigFromFile(path string) *Config {
     }
 
     return &Config{
-        AppName: config.Get("app-name").(string),
-
         DBHost:     config.Get("db.host").(string),
         DBPort:     config.Get("db.port").(string),
         DBUser:     config.Get("db.user").(string),
