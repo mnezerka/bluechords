@@ -1,12 +1,11 @@
-package main
+package service
 
 import (
-    //"encoding/base64"
     "fmt"
     jwt "github.com/dgrijalva/jwt-go"
     "github.com/op/go-logging"
-    //"strconv"
     "time"
+    "github.com/mnezerka/bluechords/server/model"
 )
 
 type AuthService struct {
@@ -19,7 +18,7 @@ func NewAuthService(config *Config, log *logging.Logger) *AuthService {
     return &AuthService{&config.JWTSecret, &config.JWTExpireIn, log}
 }
 
-func (a *AuthService) SignJWT(user *User) (*string, error) {
+func (a *AuthService) SignJWT(user *model.User) (*string, error) {
 
     // Declare the expiration time of the token
     // here, we read this value (in seconds) from configuration

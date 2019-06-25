@@ -1,30 +1,9 @@
-package main
+package model
 
 import (
     "golang.org/x/crypto/bcrypt"
     "log"
 )
-
-// Struct used to read the username and password from the request body
-type UserCredentials struct {
-    Email    string `json:"email"`
-    Password string `json:"password"`
-}
-
-type LoginResponse struct {
-    *Response
-    AccessToken string `json:"access_token,omitempty"`
-}
-
-type Permission struct {
-    ID   int64
-    Name string
-}
-
-type Response struct {
-    Code  int    `json:"code"`
-    Error string `json:"error,omitempty"`
-}
 
 type User struct {
     ID        int64     `db:"id"`

@@ -1,3 +1,3 @@
-package main
+package resolver
 
 type Resolver struct{}

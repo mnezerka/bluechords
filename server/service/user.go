@@ -1,10 +1,11 @@
-package main
+package service
 
 import (
     "database/sql"
     "errors"
     "github.com/jmoiron/sqlx"
     "github.com/op/go-logging"
+    "github.com/mnezerka/bluechords/server/model"
 )
 
 type UserService struct {
@@ -16,8 +17,8 @@ func NewUserService(db *sqlx.DB, log *logging.Logger) *UserService {
     return &UserService{db: db, log: log}
 }
 
-func (u *UserService) FindByEmail(email string) (*User, error) {
-    user := &User{}
+func (u *UserService) FindByEmail(email string) (*model.User, error) {
+    user := &model.User{}
 
     userSQL := `SELECT * FROM users WHERE email = ?`
     u.log.Debugf("query: %s, email: %s", userSQL, email)
@@ -36,7 +37,7 @@ func (u *UserService) FindByEmail(email string) (*User, error) {
     return user, nil
 }
 
-func (u *UserService) CreateUser(user *User) (*User, error) {
+func (u *UserService) CreateUser(user *model.User) (*model.User, error) {
     userSQL := `INSERT INTO users (email, password, created) VALUES (:email, :password, UNIX_TIMESTAMP(NOW()))`
 
     u.log.Infof("SQL: %s", userSQL)
@@ -58,8 +59,8 @@ func (u *UserService) CreateUser(user *User) (*User, error) {
     return user, nil
 }
 
-func (u *UserService) List() ([]*User, error) {
-    users := make([]*User, 0)
+func (u *UserService) List() ([]*model.User, error) {
+    users := make([]*model.User, 0)
 
     userSQL := `SELECT * FROM users ORDER BY created DESC;`
     err := u.db.Select(&users, userSQL)
@@ -79,7 +80,7 @@ func (u *UserService) Count() (int, error) {
     return count, nil
 }
 
-func (u *UserService) ComparePassword(userCredentials *UserCredentials) (*User, error) {
+func (u *UserService) ComparePassword(userCredentials *model.UserCredentials) (*model.User, error) {
     user, err := u.FindByEmail(userCredentials.Email)
     if err != nil {
         return nil, errors.New(UnauthorizedAccess)

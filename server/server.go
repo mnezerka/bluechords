@@ -4,6 +4,7 @@ import (
     "net/http"
     graphql "github.com/graph-gophers/graphql-go"
     "golang.org/x/net/context"
+    "github.com/mnezerka/bluechords/server/resolver"
 )
 
 func main() {
@@ -25,7 +26,7 @@ func main() {
     ctx = context.WithValue(ctx, "userService", userService)
     ctx = context.WithValue(ctx, "authService", authService)
 
-    graphqlSchema := graphql.MustParseSchema(GetRootSchema(), &Resolver{})
+    graphqlSchema := graphql.MustParseSchema(GetRootSchema(), &resolver.Resolver{})
 
     // endpoint for authentication - generating token
     http.Handle("/login", AddContext(ctx, Login()))

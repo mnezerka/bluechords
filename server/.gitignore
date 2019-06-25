@@ -7,3 +7,4 @@
 bindata.go
 *curl
 token
+server
