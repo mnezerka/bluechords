@@ -1,4 +1,4 @@
-package main
+package configuration
 
 import (
     "github.com/spf13/viper"
@@ -20,7 +20,7 @@ type Config struct {
     LogFormat   string
 }
 
-func makeConfigFromFile(path string) *Config {
+func MakeConfigFromFile(path string) *Config {
     config := viper.New()
     config.SetConfigName("Config")
     config.AddConfigPath(".")

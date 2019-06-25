@@ -1,17 +1,18 @@
-package main
+package handler
 
 import (
     "encoding/json"
-    jwt "github.com/dgrijalva/jwt-go"
     "github.com/op/go-logging"
     "net/http"
+    "github.com/mnezerka/bluechords/server/model"
+    "github.com/mnezerka/bluechords/server/configuration"
+    "github.com/mnezerka/bluechords/server/service"
 )
 
-// Create a struct that will be encoded to a JWT.
-// We add jwt.StandardClaims as an embedded type, to provide fields like expiry time
-type Claims struct {
-    Id int64            `json:"id"`
-    jwt.StandardClaims
+func writeResponse(w http.ResponseWriter, response interface{}, code int) {
+    jsonResponse, _ := json.Marshal(response)
+    w.WriteHeader(code)
+    w.Write(jsonResponse)
 }
 
 // Create the Signin handler
@@ -24,15 +25,15 @@ func Login() http.Handler {
         // get request context
         ctx := r.Context()
 
-        loginResponse := &LoginResponse{}
+        loginResponse := &model.LoginResponse{}
 
-        var creds UserCredentials
+        var creds model.UserCredentials
 
         // check http method, POST is required
         if r.Method != http.MethodPost {
-            response := &Response{
+            response := &model.Response{
                 Code:  http.StatusMethodNotAllowed,
-                Error: PostMethodSupported,
+                Error: configuration.PostMethodSupported,
             }
             loginResponse.Response = response
             writeResponse(w, loginResponse, loginResponse.Code)
@@ -46,7 +47,7 @@ func Login() http.Handler {
             w.WriteHeader(http.StatusBadRequest)
             return
 
-            response := &Response{
+            response := &model.Response{
                 Code:  http.StatusBadRequest,
                 Error: err.Error(),
             }
@@ -61,9 +62,9 @@ func Login() http.Handler {
         // as the password we received, the we can move ahead if NOT, then
         // we return an "Unauthorized" status
         ctx.Value("log").(*logging.Logger).Debugf("Identifying user %s in users database", creds.Email)
-        user, err := ctx.Value("userService").(*UserService).ComparePassword(&creds)
+        user, err := ctx.Value("userService").(*service.UserService).ComparePassword(&creds)
         if err != nil {
-            response := &Response{
+            response := &model.Response{
                 Code:  http.StatusUnauthorized,
                 Error: err.Error(),
             }
@@ -74,11 +75,11 @@ func Login() http.Handler {
 
         ctx.Value("log").(*logging.Logger).Debug("User found, generating and signing JWT token")
 
-        tokenString, err := ctx.Value("authService").(*AuthService).SignJWT(user)
+        tokenString, err := ctx.Value("authService").(*service.AuthService).SignJWT(user)
         if err != nil {
-            response := &Response{
+            response := &model.Response{
                 Code:  http.StatusBadRequest,
-                Error: TokenError,
+                Error: configuration.TokenError,
             }
             loginResponse.Response = response
             writeResponse(w, loginResponse, loginResponse.Code)
@@ -87,7 +88,7 @@ func Login() http.Handler {
 
         ctx.Value("log").(*logging.Logger).Debugf("Token string: %s", *tokenString)
 
-        response := &Response{
+        response := &model.Response{
             Code: http.StatusOK,
         }
         loginResponse.Response = response

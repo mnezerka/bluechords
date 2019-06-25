@@ -1,4 +1,4 @@
-package main
+package configuration
 
 const (
     PostMethodSupported = "only post method is allowed"

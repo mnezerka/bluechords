@@ -6,6 +6,7 @@ import (
     "github.com/jmoiron/sqlx"
     "github.com/op/go-logging"
     "github.com/mnezerka/bluechords/server/model"
+    "github.com/mnezerka/bluechords/server/configuration"
 )
 
 type UserService struct {
@@ -83,10 +84,10 @@ func (u *UserService) Count() (int, error) {
 func (u *UserService) ComparePassword(userCredentials *model.UserCredentials) (*model.User, error) {
     user, err := u.FindByEmail(userCredentials.Email)
     if err != nil {
-        return nil, errors.New(UnauthorizedAccess)
+        return nil, errors.New(configuration.UnauthorizedAccess)
     }
     if result := user.ComparePassword(userCredentials.Password); !result {
-        return nil, errors.New(UnauthorizedAccess)
+        return nil, errors.New(configuration.UnauthorizedAccess)
     }
     return user, nil
 }

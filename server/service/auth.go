@@ -6,6 +6,7 @@ import (
     "github.com/op/go-logging"
     "time"
     "github.com/mnezerka/bluechords/server/model"
+    "github.com/mnezerka/bluechords/server/configuration"
 )
 
 type AuthService struct {
@@ -14,7 +15,7 @@ type AuthService struct {
     log                 *logging.Logger
 }
 
-func NewAuthService(config *Config, log *logging.Logger) *AuthService {
+func NewAuthService(config *configuration.Config, log *logging.Logger) *AuthService {
     return &AuthService{&config.JWTSecret, &config.JWTExpireIn, log}
 }
 
@@ -25,7 +26,7 @@ func (a *AuthService) SignJWT(user *model.User) (*string, error) {
     expirationTime := time.Now().Add(time.Second * *a.expiredTimeInSecond)
 
     // Create the JWT claims, which includes the user id and expiry time
-    claims := &Claims{
+    claims := &model.Claims{
         Id: user.ID,
         StandardClaims: jwt.StandardClaims{
             // In JWT, the expiry time is expressed as unix milliseconds
@@ -42,10 +43,10 @@ func (a *AuthService) SignJWT(user *model.User) (*string, error) {
 }
 
 // validate token provided as string, return parsed token
-func (a *AuthService) ValidateJWT(tokenString *string) (*jwt.Token, *Claims, error) {
+func (a *AuthService) ValidateJWT(tokenString *string) (*jwt.Token, *model.Claims, error) {
 
     // Initialize a new instance of `Claims`
-    claims := &Claims{}
+    claims := &model.Claims{}
 
     //token, err := jwt.Parse(*tokenString, func(token *jwt.Token) (interface{}, error) {
     token, err := jwt.ParseWithClaims(*tokenString, claims, func(token *jwt.Token) (interface{}, error) {

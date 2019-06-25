@@ -5,21 +5,25 @@ import (
     graphql "github.com/graph-gophers/graphql-go"
     "golang.org/x/net/context"
     "github.com/mnezerka/bluechords/server/resolver"
+    "github.com/mnezerka/bluechords/server/configuration"
+    "github.com/mnezerka/bluechords/server/handler"
+    "github.com/mnezerka/bluechords/server/db"
+    "github.com/mnezerka/bluechords/server/service"
 )
 
 func main() {
-    config := makeConfigFromFile(".")
+    config := configuration.MakeConfigFromFile(".")
 
     ctx := context.Background()
-    log := NewLogger(config)
+    log := service.NewLogger(config)
 
-    db, err := openDb(log, config)
+    db, err := db.OpenDb(log, config)
     if err != nil {
         log.Fatalf("Unable to connect to db: %s \n", err)
     }
 
-    userService := NewUserService(db, log)
-    authService := NewAuthService(config, log)
+    userService := service.NewUserService(db, log)
+    authService := service.NewAuthService(config, log)
 
     ctx = context.WithValue(ctx, "config", config)
     ctx = context.WithValue(ctx, "log", log)
@@ -29,13 +33,13 @@ func main() {
     graphqlSchema := graphql.MustParseSchema(GetRootSchema(), &resolver.Resolver{})
 
     // endpoint for authentication - generating token
-    http.Handle("/login", AddContext(ctx, Login()))
+    http.Handle("/login", handler.AddContext(ctx, handler.Login()))
 
     // endpoint for querying
-    loggerHandler := &LoggerHandler{config.DebugMode}
+    loggerHandler := &handler.LoggerHandler{config.DebugMode}
     http.Handle(
         "/query",
-        AddContext(ctx, loggerHandler.Logging(Authenticate(&GraphQL{Schema: graphqlSchema}))))
+        handler.AddContext(ctx, loggerHandler.Logging(handler.Authenticate(&handler.GraphQL{Schema: graphqlSchema}))))
 
     // enpoint for interactive graphql web IDE
     http.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

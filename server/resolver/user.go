@@ -5,6 +5,7 @@ import (
     "strconv"
     "github.com/mnezerka/bluechords/server/model"
     "github.com/mnezerka/bluechords/server/service"
+    "github.com/mnezerka/bluechords/server/configuration"
     "errors"
     "github.com/op/go-logging"
     "golang.org/x/net/context"
@@ -53,7 +54,7 @@ func (r *Resolver) Users(ctx context.Context) ([]*UserResolver, error) {
     ctx.Value("log").(*logging.Logger).Debugf("here")
 
     if isAuthorized := ctx.Value("is_authorized").(bool); !isAuthorized {
-        return nil, errors.New(CredentialsError)
+        return nil, errors.New(configuration.CredentialsError)
     }
 
     ctx.Value("log").(*logging.Logger).Debugf("here2")
@@ -70,7 +71,7 @@ func (r *Resolver) Users(ctx context.Context) ([]*UserResolver, error) {
 
     ctx.Value("log").(*logging.Logger).Debugf("Retrieved users by user_id[%d] :", *userId)
 
-    config := ctx.Value("config").(*Config)
+    config := ctx.Value("config").(*configuration.Config)
 
     if config.DebugMode {
         for _, user := range users {
