@@ -15,14 +15,14 @@ func GetRootSchema() string {
 
         type Mutation {
             createUser(email: String!, password: String!): User
-            createSong(name: String!, artist: String!, content: String!): Song
+            createSong(name: String!): Song
         }
 
         type User {
             id: ID!
             email: String!
-            password: String!
-            created: Int!
+            password: String
+            created: Int
         }
 
         type Song {
@@ -31,7 +31,7 @@ func GetRootSchema() string {
             artist: String!
             content: String!
             private: Boolean!
-            owner: User!
+            owner: User
             created: Int!
             updated: Int!
         }

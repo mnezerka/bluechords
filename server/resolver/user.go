@@ -20,8 +20,8 @@ func (r *UserResolver) ID() graphql.ID {
     return graphql.ID(strconv.FormatInt(r.u.ID, 10))
 }
 
-func (r *UserResolver) Email() *string {
-    return &r.u.Email
+func (r *UserResolver) Email() string {
+    return r.u.Email
 }
 
 func (r *UserResolver) Password() *string {
